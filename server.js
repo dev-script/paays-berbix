@@ -6,8 +6,8 @@ const path = require('path');
 const morgan = require('morgan');
 const log4js = require('log4js');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const compression = require('compression');
+const fs = require('fs');
 const { appUtility } = require('./utilities/server-utils');
 const { constants } = require('./config');
 const { connectToMongoDb } = require('./db');
@@ -22,12 +22,6 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/static', express.static('static'));
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(session({
-    secret: 'some-secret',
-    resave: false,
-    saveUninitialized: true,
-}));
 app.use(morgan('combined'));
 app.use(compression());
 
@@ -56,13 +50,7 @@ process.on('unhandledRejection', (error) => {
 // Establish mongodb connection
 connectToMongoDb();
 
-app.get('/doc', (req,res)=> {
-    res.sendFile('/public/doc/index.html');
-});
-
 http.createServer({
-    // key: fs.readFileSync(path.join(__dirname, '/keys', 'server-key.pem')),
-    // cert: fs.readFileSync(path.join(__dirname, '/keys', 'server-cert.pem')),
+    key: fs.readFileSync(path.join(__dirname, '/keys', 'server-key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, '/keys', 'server-cert.pem')),
 }, app).listen(port);
-
-console.log(`Server running on http://localhost:${port}`);
