@@ -1,0 +1,99 @@
+{
+    "appenders": {
+        "app": {
+            "type": "console",
+            "layout": {
+                "type": "pattern",
+                "pattern": "%m"
+            },
+            "category": "app"
+        },
+        "debug_log": {
+            "category": "debug",
+            "type": "file",
+            "filename": "logs/debug/debug.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        },
+        "info_log": {
+            "category": "info",
+            "type": "file",
+            "filename": "logs/info/info.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        },
+        "error_log": {
+            "category": "error",
+            "type": "file",
+            "filename": "logs/error/error.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        },
+        "trace_log": {
+            "category": "trace",
+            "type": "file",
+            "filename": "logs/trace/trace.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        },
+        "warn_log": {
+            "category": "warn",
+            "type": "file",
+            "filename": "logs/warn/warn.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        },
+        "fatal_log": {
+            "category": "fatal",
+            "type": "file",
+            "filename": "logs/fatal/fatal.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        },
+        "mark_log": {
+            "category": "mark",
+            "type": "file",
+            "filename": "logs/mark/mark.log",
+            "maxLogSize": 10485760,
+            "backups": 3,
+            "compress": true
+        }
+    },
+    "categories": {
+        "default": {
+            "appenders": ["debug_log"],
+            "level": "debug"
+        },
+        "info_log": {
+            "appenders": ["info_log"],
+            "level": "info"
+        },
+        "error_log": {
+            "appenders": ["error_log"],
+            "level": "error"
+        },
+        "trace_log": {
+            "appenders": ["trace_log"],
+            "level": "trace"
+        },
+        "warn_log": {
+            "appenders": ["warn_log"],
+            "level": "warn"
+        },
+        "fatal_log": {
+            "appenders": ["fatal_log"],
+            "level": "fatal"
+        },
+        "mark_log": {
+            "appenders": ["mark_log"],
+            "level": "mark"
+        }
+    },
+    "pm2": true
+}
