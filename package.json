@@ -8,20 +8,24 @@
   },
   "scripts": {
     "start": "node server.js",
-    "deploy": "npm i && pm2 start server.js"
+    "pm2:deploy": "npm i && pm2 start ./.pm2.json --name paays-berbix",
+    "pm2:stop": "pm2 stop ./.pm2.json",
+    "pm2:kill": "pm2 delete ./.pm2.json",
+    "pm2:restart": "pm2 restart ./.pm2.json"
   },
   "dependencies": {
+    "berbix": "^1.0.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-validator": "^6.12.1",
-    "jsonwebtoken": "^8.5.1",
     "log4js": "^6.3.0",
     "mongoose": "^5.13.6",
     "morgan": "^1.10.0",
     "phone": "^3.1.8",
-    "pm2": "^5.1.2"
+    "pm2": "^5.1.2",
+    "uuid": "^8.3.2"
   }
 }

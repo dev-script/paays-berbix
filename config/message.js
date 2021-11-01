@@ -27,6 +27,9 @@ const message = {
     INVALID_SUBCRIPTION_END_DATE: 'invalid subscription end date',
     INVALID_PHONE_NUMBER: "invalid phone number",
     PHONE_NUMBER_REQUIRED: "phone number is required",
+
+    PLEASE_PROVIDE_PHONE_NUMBER: 'please provide phone number',
+    INVALID_EMAIL: 'invalid email',
 };
 
 module.exports = {

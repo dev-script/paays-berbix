@@ -19,12 +19,12 @@ const getDocumentById = (_collection, documentId, selection = {}) => _collection
  * @param {string} condition Condition by which document data will be fetched
  * @param {object} [selection] Object with DB projection
  * */
-const getDocument = (_collection, condition = {}, selection = {}) => _collection.findOne(condition, selection).lean();
+const getDocument = (_collection, condition = {}, selection = {}, sort = {}) => _collection.findOne(condition, selection, sort).lean();
 
 /**
  * Method to get all data of document info from collection
  * */
-const getAllDocuments = (_collection, condition = {}, selection = {}, sort = {}) => _collection.find(condition, selection, sort).select('-password').lean();
+const getAllDocuments = (_collection, condition = {}, selection = {}, sort = {}) => _collection.find(condition, selection, sort).lean();
 
 /**
  * Method to create document in DB

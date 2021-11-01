@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "paays-berbix",
+      "script": "./server.js",
+      "exec_mode" : "fork",
+      "log": "./pm2-log/out-err.log",
+      "log_type": "timestamp",
+      "log_date_format": "DD-MM-YYYY hh:mm"
+    }
+  ]
+}

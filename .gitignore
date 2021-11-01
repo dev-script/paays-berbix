@@ -12,6 +12,8 @@ node_modules
 logs
 public
 *.log
+.pm2.json
+pm2-log
 
 # testing
 /coverage

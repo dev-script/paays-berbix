@@ -7,33 +7,38 @@ const { Schema, model } = require('mongoose');
 const { message } = require('../../config');
 
 const userSchema = new Schema({
-    name: {
-        type: String,
-        trim: true,
-        required: [true, message.NAME_REQUIRED],
-    },
-    username: {
-        type: String,
-        trim: true,
-        required: [true, message.USERNAME_REQUIRED],
-    },
-    password: {
-        type: String,
-        trim: true,
-        required: [true, message.USER_PASSWORD_REQUIRED],
-    },
-    phonenumber: {
+    transaction_id: {
         type: String,
         trim: true,
         required: true,
     },
-    subscription_start: {
-        type: Date,
+    refresh_token: {
+        type: String,
+        trim: true,
         required: true,
     },
-    subscription_end: {
-        type: Date,
+    customer_uid: {
+        type: String,
+        trim: true,
         required: true,
+    },
+    phone: {
+        type: String,
+        trim: true,
+        required: true,
+    },
+    country_code: {
+        type: String,
+        trim: true,
+        required: true,
+    },
+    email: {
+        type: String,
+        trim: true,
+        required: true,
+    },
+    data: {
+        type: Object,
     },
 },
     {

@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const morgan = require('morgan');
 const log4js = require('log4js');
@@ -50,7 +50,7 @@ process.on('unhandledRejection', (error) => {
 // Establish mongodb connection
 connectToMongoDb();
 
-http.createServer({
+https.createServer({
     key: fs.readFileSync(path.join(__dirname, '/keys', 'server-key.pem')),
     cert: fs.readFileSync(path.join(__dirname, '/keys', 'server-cert.pem')),
 }, app).listen(port);
