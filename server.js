@@ -6,6 +6,8 @@ const path = require('path');
 const morgan = require('morgan');
 const log4js = require('log4js');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const compression = require('compression');
 const fs = require('fs');
 const { appUtility } = require('./utilities/server-utils');
@@ -24,7 +26,7 @@ app.use(bodyParser.json());
 app.use('/static', express.static('static'));
 app.use(morgan('combined'));
 app.use(compression());
-
+app.use(cors());
 // load all controller =========================================================
 appUtility.loadControllers(app);
 
