@@ -9,6 +9,7 @@ const {
     createDocument,
 } = require("../../db/controllers");
 const { createTransaction, getTransactionData } = require('./berbix.service');
+const { formatTransactionData } = require('./berbix.utils');
 const { constants, message } = require('../../config');
 const { catchFunction } = require('../../utilities/common-utils');
 
@@ -89,12 +90,14 @@ module.exports = function (app) {
             }
             const { _id: userId, refresh_token } = userData;
             const fetchResponse = await getTransactionData(refresh_token);
+            //format transaction meta data
+            const formattedResponse = formatTransactionData(fetchResponse);
             await updateDocument(Users, {
-                _id: userData._id
+                _id: userId
             }, {
-                data: fetchResponse
+                data: formattedResponse
             })
-            return res.status(SUCCESS.CODE).send({ data : fetchResponse });
+            return res.status(SUCCESS.CODE).send({ data : formattedResponse });
         } catch (getUserDataError) {
             return catchFunction({
                 res,
