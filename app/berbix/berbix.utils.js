@@ -2,7 +2,17 @@
 const formatTransactionData = (data) => {
     //format transaction meta data
     let formattedResponse = {};
-    const { action, fields } = data;
+    const {
+        entity,
+        id,
+        flags,
+        images,
+        verifications,
+        customer_uid,
+        duplicates,
+        action,
+        fields
+    } = data;
     let status = null;
     if (action) status = action;
     if (fields && Object.keys(fields).length) {
@@ -81,6 +91,13 @@ const formatTransactionData = (data) => {
         const formatted_address = address_array && address_array.length ? address_array.join(',') : null;
 
         formattedResponse = {
+            entity,
+            id,
+            flags,
+            images: images || {},
+            verifications,
+            customer_uid,
+            duplicates,
             status,
             user: {
                 fullName,
