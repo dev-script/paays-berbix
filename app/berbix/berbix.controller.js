@@ -135,6 +135,13 @@ module.exports = function (app) {
                     data = await getAllDocuments(Users, {}, {}, { sort: { created_at: -1 }, skip, limit });
                 }
             }
+            let renameObjectKeys = (object) => {
+                object.phoneNumber = object.phone;
+                object.dealerEmail = object.email;
+                delete object.phone;
+                delete object.email;
+            };
+            data.map(item => renameObjectKeys(item));
             return res.status(SUCCESS.CODE).send({ data });
         } catch (getUserError) {
             return catchFunction({
