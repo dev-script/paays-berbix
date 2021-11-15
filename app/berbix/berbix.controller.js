@@ -90,7 +90,6 @@ module.exports = function (app) {
             }
             const { _id: userId, refresh_token } = userData;
             const fetchResponse = await getTransactionData(refresh_token);
-            console.log("berbix data :", fetchResponse);
             //format transaction meta data
             const formattedResponse = formatTransactionData(fetchResponse);
             await updateDocument(Users, {
@@ -98,7 +97,7 @@ module.exports = function (app) {
             }, {
                 data: formattedResponse
             })
-            return res.status(SUCCESS.CODE).send({ data : formattedResponse });
+            return res.status(SUCCESS.CODE).send({ data : fetchResponse });
         } catch (getUserDataError) {
             return catchFunction({
                 res,
