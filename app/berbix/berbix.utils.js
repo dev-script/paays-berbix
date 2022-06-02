@@ -101,6 +101,7 @@ const formatTransactionData = (data) => {
             customer_uid,
             duplicates,
             state,
+            checks: [],
             user: {
                 full_name,
                 given_names: given_name.value || null,
