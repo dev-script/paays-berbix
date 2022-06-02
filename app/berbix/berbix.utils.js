@@ -103,9 +103,9 @@ const formatTransactionData = (data) => {
             state,
             user: {
                 full_name,
-                given_names: given_name,
-                middle_name,
-                family_name,
+                given_names: given_name.value || null,
+                middle_name: middle_name.value || null,
+                family_name: family_name.value || null,
                 gender,
                 date_of_birth,
                 age,
