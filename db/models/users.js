@@ -7,32 +7,32 @@ const { Schema, model } = require('mongoose');
 const { message } = require('../../config');
 
 const userSchema = new Schema({
-    transaction_id: {
+    transactionId: {
         type: String,
         trim: true,
         required: true,
     },
-    refresh_token: {
+    refreshToken: {
         type: String,
         trim: true,
         required: true,
     },
-    customer_uid: {
+    customerUid: {
         type: String,
         trim: true,
         required: true,
     },
-    phone: {
+    phoneNumber: {
         type: String,
         trim: true,
         required: true,
     },
-    country_code: {
+    countryCode: {
         type: String,
         trim: true,
         required: true,
     },
-    email: {
+    dealerEmail: {
         type: String,
         trim: true,
         required: true,
@@ -42,7 +42,7 @@ const userSchema = new Schema({
     },
 },
     {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+        timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
     }
 );
 

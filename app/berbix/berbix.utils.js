@@ -13,8 +13,10 @@ const formatTransactionData = (data) => {
         action,
         fields
     } = data;
-    let status = null;
-    if (action) status = action;
+    let state = null;
+    if (action === 'review') state = 'IN PROGRESS';
+    else if(action === 'accept') state = 'COMPLETED';
+    else state = 'EXPIRED';
     if (fields && Object.keys(fields).length) {
         const {
             given_name,
@@ -40,7 +42,7 @@ const formatTransactionData = (data) => {
         if (given_name && given_name.value) name_array.push(given_name.value);
         if (middle_name && middle_name.value) name_array.push(middle_name.value);
         if (family_name && family_name.value) name_array.push(family_name.value);
-        const fullName = name_array && name_array.length ? name_array.join(' ') : null;
+        const full_name = name_array && name_array.length ? name_array.join(' ') : null;
 
         // user gender
         let gender = null;
@@ -71,8 +73,8 @@ const formatTransactionData = (data) => {
         if (id_type && id_type.value) document_type = id_type.value;
 
         // document issuing country
-        let issuing_country = null;
-        if (id_issuer && id_issuer.value) issuing_country = id_issuer.value;
+        let issuing_authority = null;
+        if (id_issuer && id_issuer.value) issuing_authority = id_issuer.value;
 
         // address postal code
         let postal_code = null;
@@ -98,9 +100,12 @@ const formatTransactionData = (data) => {
             verifications,
             customer_uid,
             duplicates,
-            status,
+            state,
             user: {
-                fullName,
+                full_name,
+                given_names: given_name,
+                middle_name,
+                family_name,
                 gender,
                 date_of_birth,
                 age,
@@ -108,12 +113,12 @@ const formatTransactionData = (data) => {
                 expiration_date,
                 document_number,
                 document_type,
-                issuing_country,
+                issuing_authority,
                 structured_postal_address: {
                     postal_code,
                     country,
                     formatted_address,
-                }
+                },
             }
         }
     }

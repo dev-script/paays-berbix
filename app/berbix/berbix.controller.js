@@ -20,21 +20,21 @@ module.exports = function (app) {
         try {
             const {
                 phoneNumber,
-                dealerEmail: email,
+                dealerEmail,
                 countryCode,
             } = req.query;
             const country_code = countryCode ? countryCode : 'CA';
-            if (phoneNumber && email && country_code) {
+            if (phoneNumber && dealerEmail && country_code) {
                 const result = phone(phoneNumber, {
                     country: country_code,
                 });
                 const { isValid } = result;
                 const re = constants.REGEX_EMAIL;
-                const isValidEmail = re.test(email.toLowerCase());
+                const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
                 else {
-                    const transaction = await createTransaction(phoneNumber, email);
+                    const transaction = await createTransaction(phoneNumber, dealerEmail);
                     const {
                         customer_uid,
                         transaction_id,
@@ -43,7 +43,7 @@ module.exports = function (app) {
                     } = transaction;
 
                     // check if same phone number exists in database
-                    const userData = await getDocument(Users, { phone: phoneNumber });
+                    const userData = await getDocument(Users, { phoneNumber });
 
                     // remove user data if exists with same phone number
                     if (userData) {
@@ -53,12 +53,12 @@ module.exports = function (app) {
 
                     // save data in db
                     await createDocument(Users, {
-                        customer_uid,
-                        transaction_id,
-                        refresh_token,
-                        phone: phoneNumber,
-                        email,
-                        country_code,
+                        customerUid: customer_uid,
+                        transactionId: transaction_id,
+                        refreshToken: refresh_token,
+                        phoneNumber,
+                        dealerEmail,
+                        countryCode: country_code,
                     });
                     return res.redirect(hosted_url);
                 }
@@ -82,14 +82,14 @@ module.exports = function (app) {
                     message: message.PLEASE_PROVIDE_PHONE_NUMBER,
                 });
             }
-            const userData = await getDocument(Users, { phone: phoneNumber }, {}, { sort: { created_at: -1 } });
+            const userData = await getDocument(Users, { phoneNumber }, {}, { sort: { createdAt: -1 } });
             if (!userData) {
                 return res.status(SUCCESS.CODE).send({
                     message: message.USER_NOT_FOUND,
                 });
             }
-            const { _id: userId, refresh_token } = userData;
-            const fetchResponse = await getTransactionData(refresh_token);
+            const { _id: userId, refreshToken } = userData;
+            const fetchResponse = await getTransactionData(refreshToken);
             //format transaction meta data
             const formattedResponse = formatTransactionData(fetchResponse);
             await updateDocument(Users, {
@@ -130,18 +130,18 @@ module.exports = function (app) {
                             message: messages.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { email: dealerEmail }, {}, { sort: { created_at: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { createdAt: -1 }, skip, limit });
                 } else {
-                    data = await getAllDocuments(Users, {}, {}, { sort: { created_at: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, skip, limit });
                 }
             }
-            let renameObjectKeys = (object) => {
-                object.phoneNumber = object.phone;
-                object.dealerEmail = object.email;
-                delete object.phone;
-                delete object.email;
-            };
-            data.map(item => renameObjectKeys(item));
+            // let renameObjectKeys = (object) => {
+            //     object.phoneNumber = object.phone;
+            //     object.dealerEmail = object.email;
+            //     delete object.phone;
+            //     delete object.email;
+            // };
+            // data.map(item => renameObjectKeys(item));
             return res.status(SUCCESS.CODE).send({ data });
         } catch (getUserError) {
             return catchFunction({
