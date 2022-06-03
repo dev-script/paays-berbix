@@ -116,8 +116,8 @@ const formatTransactionData = (data) => {
                 document_type,
                 issuing_authority,
                 structured_postal_address: {
-                    postal_code,
-                    country,
+                    // postal_code,
+                    // country,
                     formatted_address,
                 },
             }
