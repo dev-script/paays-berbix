@@ -15,15 +15,31 @@ const formatTransactionData = (data) => {
     } = data;
     let state = null;
     let checks = [];
+    let checkResult = {};
     if (action === 'review') {
         state = 'IN PROGRESS';
         checks = reviewCheck;
+        checkResult = {
+            status: "Inconclusive",
+            color: "#FF9F43",
+            icon: "query_builder"
+        };
     }else if(action === 'accept') {
         state = 'COMPLETED';
         checks = acceptCheck;
+        checkResult = {
+            status: "Verified",
+            color: "#3ADE84",
+            icon: "check_circle_outline"
+        };
     }else {
         state = 'EXPIRED';
         checks = rejectCheck;
+        checkResult = {
+            status: "Failed",
+            color: "#E7455D",
+            icon: "cancel"
+        };
     };
     if (fields && Object.keys(fields).length) {
         const {
@@ -128,6 +144,11 @@ const formatTransactionData = (data) => {
                     // country,
                     formatted_address,
                 },
+            },
+            "checkResult" : {
+                "status" : "Failed",
+                "color" : "#E7455D",
+                "icon" : "cancel"
             }
         }
     }
