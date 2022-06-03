@@ -14,9 +14,17 @@ const formatTransactionData = (data) => {
         fields
     } = data;
     let state = null;
-    if (action === 'review') state = 'IN PROGRESS';
-    else if(action === 'accept') state = 'COMPLETED';
-    else state = 'EXPIRED';
+    const checks = [];
+    if (action === 'review') {
+        state = 'IN PROGRESS';
+        checks = reviewCheck;
+    }else if(action === 'accept') {
+        state = 'COMPLETED';
+        checks = acceptCheck;
+    }else {
+        state = 'EXPIRED';
+        checks = rejectCheck;
+    };
     if (fields && Object.keys(fields).length) {
         const {
             given_name,
@@ -101,7 +109,7 @@ const formatTransactionData = (data) => {
             customer_uid,
             duplicates,
             state,
-            checks: [],
+            checks,
             user: {
                 full_name,
                 given_names: given_name.value || null,
@@ -130,3 +138,145 @@ const formatTransactionData = (data) => {
 module.exports = {
     formatTransactionData,
 }
+
+
+const acceptCheck = [ 
+    {
+        "type" : "ID_DOCUMENT_AUTHENTICITY",
+        "report" : {
+            "recommendationValue" : "APPROVE",
+            "reason" : null,
+            "dashboardResponse" : null,
+            "color" : "#3ADE84",
+            "responseDescription" : null,
+            "checkType" : "Document",
+            "checkValue" : "Verified"
+        }
+    }, 
+    {
+        "type" : "ID_DOCUMENT_FACE_MATCH",
+        "report" : {
+            "recommendationValue" : "APPROVE",
+            "reason" : "",
+            "dashboardResponse" : "Failed",
+            "color" : "#3ADE84",
+            "responseDescription" : null,
+            "checkType" : "Face-match",
+            "checkValue" : "Verified"
+        }
+    }, 
+    {
+        "type" : "LIVENESS",
+        "report" : {
+            "recommendationValue" : "APPROVE",
+            "reason" : null,
+            "dashboardResponse" : null,
+            "color" : "#3ADE84",
+            "responseDescription" : null,
+            "checkType" : "Liveness",
+            "checkValue" : "Verified"
+        }
+    }, 
+    {
+        "type" : "FRAUD_CHECK",
+        "report" : {
+            "idv_response" : "Verified",
+            "checkType" : "Fraud Check",
+            "checkValue" : "Verified"
+        }
+    }
+]
+
+const rejectCheck = [ 
+    {
+        "type" : "ID_DOCUMENT_AUTHENTICITY",
+        "report" : {
+            "recommendationValue" : "REJECT",
+            "reason" : "",
+            "dashboardResponse" : "Failed",
+            "color" : "#FF0000",
+            "responseDescription" : "",
+            "checkType" : "Document",
+            "checkValue" : "Failed"
+        }
+    }, 
+    {
+        "type" : "ID_DOCUMENT_FACE_MATCH",
+        "report" : {
+            "recommendationValue" : "REJECT",
+            "reason" : "",
+            "dashboardResponse" : "Failed",
+            "color" : "#FF0000",
+            "responseDescription" : "",
+            "checkType" : "Document",
+            "checkValue" : "Failed"
+        }
+    }, 
+    {
+        "type" : "LIVENESS",
+        "report" : {
+            "recommendationValue" : "REJECT",
+            "reason" : "",
+            "dashboardResponse" : "Failed",
+            "color" : "#FF0000",
+            "responseDescription" : "",
+            "checkType" : "Document",
+            "checkValue" : "Failed"
+        }
+    }, 
+    {
+        "type" : "FRAUD_CHECK",
+        "report" : {
+            "idv_response" : "Failed",
+            "checkType" : "Fraud Check",
+            "checkValue" : "Failed"
+        }
+    }
+]
+
+const reviewCheck = [ 
+    {
+        "type" : "ID_DOCUMENT_AUTHENTICITY",
+        "report" : {
+            "recommendationValue" : "REJECT",
+            "reason" : "",
+            "dashboardResponse" : "Redo",
+            "color" : "#FFFF00",
+            "responseDescription" : "",
+            "checkType" : "Document",
+            "checkValue" : "Inconclusive"
+        }
+    }, 
+    {
+        "type" : "ID_DOCUMENT_FACE_MATCH",
+        "report" : {
+            "recommendationValue" : "REJECT",
+            "reason" : "",
+            "dashboardResponse" : "Redo",
+            "color" : "#FFFF00",
+            "responseDescription" : "",
+            "checkType" : "Document",
+            "checkValue" : "Inconclusive"
+        }
+    }, 
+    {
+        "type" : "LIVENESS",
+        "report" : {
+            "recommendationValue" : "REJECT",
+            "reason" : "",
+            "dashboardResponse" : "Redo",
+            "color" : "#FFFF00",
+            "responseDescription" : "",
+            "checkType" : "Document",
+            "checkValue" : "Inconclusive"
+        }
+    }, 
+    {
+        "type" : "FRAUD_CHECK",
+        "report" : {
+            "idv_response" : "Inconclusive",
+            "checkType" : "Fraud Check",
+            "checkValue" : "Inconclusive"
+        }
+    }
+]
