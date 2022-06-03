@@ -14,7 +14,7 @@ const formatTransactionData = (data) => {
         fields
     } = data;
     let state = null;
-    const checks = [];
+    let checks = [];
     if (action === 'review') {
         state = 'IN PROGRESS';
         checks = reviewCheck;
