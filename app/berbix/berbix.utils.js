@@ -145,11 +145,7 @@ const formatTransactionData = (data) => {
                     formatted_address,
                 },
             },
-            "checkResult" : {
-                "status" : "Failed",
-                "color" : "#E7455D",
-                "icon" : "cancel"
-            }
+            checkResult,
         }
     }
 
