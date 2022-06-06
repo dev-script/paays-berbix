@@ -114,7 +114,7 @@ module.exports = function (app) {
                     message: message.USER_NOT_FOUND,
                 });
             }
-            const { _id: userId, refreshToken, transactionId } = userData;
+            const { _id: userId, refreshToken, transactionId, maxmindReport, requestedIP } = userData;
             const fetchResponse = await getTransactionData(refreshToken);
             //format transaction meta data
             const formattedResponse = formatTransactionData(fetchResponse);
@@ -179,6 +179,22 @@ module.exports = function (app) {
                         error,
                         onlyLog: true,
                     });
+                }
+
+                if (!maxmindReport && requestedIP) {
+                    // maxmind service
+                    maxMindService({ ipAddress: requestedIP }).then(response => {
+                        maxmindReport = response;
+                    }).catch(error => {
+                        catchFunction({
+                            res,
+                            requestId: req._id,
+                            fileName: 'berbix.controller.js',
+                            methodName: 'maxMindService',
+                            error,
+                            onlyLog: true,
+                        });
+                    })
                 }
             }
 
