@@ -114,7 +114,7 @@ module.exports = function (app) {
                     message: message.USER_NOT_FOUND,
                 });
             }
-            const { _id: userId, refreshToken, transactionId, maxmindReport, requestedIP } = userData;
+            const { _id: userId, refreshToken, transactionId, maxmindReport, userIpAddress } = userData;
             const fetchResponse = await getTransactionData(refreshToken);
             //format transaction meta data
             const formattedResponse = formatTransactionData(fetchResponse);
@@ -181,9 +181,9 @@ module.exports = function (app) {
                     });
                 }
 
-                if (!maxmindReport && requestedIP) {
+                if (!maxmindReport && userIpAddress) {
                     // maxmind service
-                    maxMindService({ ipAddress: requestedIP }).then(response => {
+                    maxMindService({ ipAddress: userIpAddress }).then(response => {
                         maxmindReport = response;
                     }).catch(error => {
                         catchFunction({
