@@ -120,7 +120,7 @@ module.exports = function (app) {
             const formattedResponse = formatTransactionData(fetchResponse);
             const { images } = formattedResponse;
 
-            if (Object.keys(images).length > 0 && Object.keys(images.front).length > 0){
+            if (images && Object.keys(images.front).length > 0){
                 // upload user images in s3 bucket
                 const frontImageResponse = await axios.get(images.front['cropped_image'],  { responseType: 'arraybuffer' });
                 const frontImageBuffer = Buffer.from(frontImageResponse.data, "utf-8");
@@ -131,13 +131,13 @@ module.exports = function (app) {
                 await s3.uploadContent(faceImageBuffer, transactionId, `face-${transactionId}`);
             }
 
-            if (Object.keys(images).length > 0 && Object.keys(images.back).length > 0){
+            if (images && Object.keys(images.back).length > 0){
                 const backImageResponse = await axios.get(images.back['cropped_image'],  { responseType: 'arraybuffer' });
                 const backImageBuffer = Buffer.from(backImageResponse.data, "utf-8");
                 await s3.uploadContent(backImageBuffer, transactionId, `back-${transactionId}`);
             }
 
-            if (Object.keys(images).length > 0 && Object.keys(images.back).length > 0){
+            if (images && Object.keys(images.back).length > 0){
                 const selfieImageResponse = await axios.get(images.selfie['face_image'],  { responseType: 'arraybuffer' });
                 const selfieImageBuffer = Buffer.from(selfieImageResponse.data, "utf-8");
                 await s3.uploadContent(selfieImageBuffer, transactionId, `selfie-${transactionId}`);
