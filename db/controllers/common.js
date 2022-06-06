@@ -24,7 +24,7 @@ const getDocument = (_collection, condition = {}, selection = {}, sort = {}) => 
 /**
  * Method to get all data of document info from collection
  * */
-const getAllDocuments = (_collection, condition = {}, selection = {}, sort = {}) => _collection.find(condition, selection, sort).lean();
+const getAllDocuments = (_collection, condition = {}, selection = {}, sort = {}, page=1, limit=10) => _collection.find(condition, selection, sort).skip((page * limit) - limit).limit(limit).lean();
 
 /**
  * Method to create document in DB

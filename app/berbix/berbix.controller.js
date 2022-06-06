@@ -201,37 +201,41 @@ module.exports = function (app) {
 
     app.getUser = async (req, res) => {
         try {
-            // get user data from db
             let data;
             if (req.params && req.params.id) {
                 const { id } = req.params;
                 data = await getDocumentById(Users, id);
             } else {
                 // add pagination
-                const { dealerEmail } = req.query;
+                const { dealerEmail, phoneNumber } = req.query;
                 const page = parseInt(req.query.page, 10);
                 const limit = parseInt(req.query.limit, 10);
                 const skip = (page - 1) * limit;
-                if (dealerEmail) {
+                if (dealerEmail && phoneNumber) {
+                    data = await getDocument(Users, { dealerEmail, phoneNumber });
+                    if (!data) {
+                        return res.status(SUCCESS.CODE).send({
+                            status: 0,
+                            message: message.USER_NOT_FOUND,
+                        });
+                    }
+                }
+                if (dealerEmail && !phoneNumber) {
                     const re = constants.REGEX_EMAIL;
                     const isValidEmail = re.test(dealerEmail.toLowerCase());
                     if (!isValidEmail) {
                         return res.status(ERROR.BAD_REQUEST.CODE).send({
-                            message: messages.INVALID_EMAIL,
+                            status: 0,
+                            message: message.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { createdAt: -1 }, skip, limit });
-                } else {
-                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { created_at: -1 }, skip, limit });
+                }
+                if (!dealerEmail && !phoneNumber) {
+                    data = await getAllDocuments(Users, {}, {}, { sort: { created_at: -1 }, skip, limit });
                 }
             }
-            // let renameObjectKeys = (object) => {
-            //     object.phoneNumber = object.phone;
-            //     object.dealerEmail = object.email;
-            //     delete object.phone;
-            //     delete object.email;
-            // };
-            // data.map(item => renameObjectKeys(item));
+
             return res.status(SUCCESS.CODE).send({ data });
         } catch (getUserError) {
             return catchFunction({
