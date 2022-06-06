@@ -117,84 +117,88 @@ module.exports = function (app) {
             const { _id: userId, refreshToken, transactionId, maxmindReport, userIpAddress } = userData;
             const fetchResponse = await getTransactionData(refreshToken);
             //format transaction meta data
-            const formattedResponse = formatTransactionData(fetchResponse);
-            const { images } = formattedResponse;
+            let formattedResponse = {};
+            if (fetchResponse && Object.keys(fetchResponse).length) formattedResponse = formatTransactionData(fetchResponse);
 
-            if (images && Object.keys(images.front).length > 0){
-                // upload user images in s3 bucket
-                const frontImageResponse = await axios.get(images.front['cropped_image'],  { responseType: 'arraybuffer' });
-                const frontImageBuffer = Buffer.from(frontImageResponse.data, "utf-8");
-                await s3.uploadContent(frontImageBuffer, transactionId, `front-${transactionId}`);
+            if (formattedResponse && Object.keys(formattedResponse).length) {
+                const { images={} } = formattedResponse;
 
-                const faceImageResponse = await axios.get(images.front['face_image'],  { responseType: 'arraybuffer' });
-                const faceImageBuffer = Buffer.from(faceImageResponse.data, "utf-8");
-                await s3.uploadContent(faceImageBuffer, transactionId, `face-${transactionId}`);
-            }
+                if (images && Object.keys(images.front).length > 0){
+                    // upload user images in s3 bucket
+                    const frontImageResponse = await axios.get(images.front['cropped_image'],  { responseType: 'arraybuffer' });
+                    const frontImageBuffer = Buffer.from(frontImageResponse.data, "utf-8");
+                    await s3.uploadContent(frontImageBuffer, transactionId, `front-${transactionId}`);
 
-            if (images && Object.keys(images.back).length > 0){
-                const backImageResponse = await axios.get(images.back['cropped_image'],  { responseType: 'arraybuffer' });
-                const backImageBuffer = Buffer.from(backImageResponse.data, "utf-8");
-                await s3.uploadContent(backImageBuffer, transactionId, `back-${transactionId}`);
-            }
-
-            if (images && Object.keys(images.back).length > 0){
-                const selfieImageResponse = await axios.get(images.selfie['face_image'],  { responseType: 'arraybuffer' });
-                const selfieImageBuffer = Buffer.from(selfieImageResponse.data, "utf-8");
-                await s3.uploadContent(selfieImageBuffer, transactionId, `selfie-${transactionId}`);
-            }
-            
-            const isUser = Object.keys(formattedResponse?.user).length;
-            if (isUser) {
-                try {
-                    hrfaReport = await hrfaService(formattedResponse.user);
-                    const { message } = hrfaReport;
-                    if (message && message.idv_response === 'Failed') {
-                        message.checkType = 'Fraud Check';
-                        message.checkValue = 'Failed';
-                    } else if (message && message.idv_response === 'Verified') {
-                        message.checkType = 'Fraud Check';
-                        message.checkValue = 'Verified';
-                    }else {
-                        message.checkType = 'Fraud Check';
-                        message.checkValue = 'Inconclusive';
-                    }
-                    userChecks.push(message.checkValue);
-                    formattedResponse.checks.push({
-                        type: "FRAUD_CHECK",
-                        report: message,
-                    })
-                } catch (error) {
-                    formattedResponse.checks.push({
-                        type: "FRAUD_CHECK",
-                        report: {
-                            checkType:"Fraud Check",
-                            checkValue:"N / A",
-                        },
-                    })
-                    catchFunction({
-                        res,
-                        requestId: req._id,
-                        fileName: 'berbix.controller.js',
-                        methodName: 'getUserData-hrfaReport',
-                        error,
-                        onlyLog: true,
-                    });
+                    const faceImageResponse = await axios.get(images.front['face_image'],  { responseType: 'arraybuffer' });
+                    const faceImageBuffer = Buffer.from(faceImageResponse.data, "utf-8");
+                    await s3.uploadContent(faceImageBuffer, transactionId, `face-${transactionId}`);
                 }
 
-                if (!maxmindReport && userIpAddress) {
-                    // maxmind service
-                    maxMindService({ ipAddress: userIpAddress }).then(response => {
-                        maxmindReport = response;
-                    }).catch(error => {
+                if (images && Object.keys(images.back).length > 0){
+                    const backImageResponse = await axios.get(images.back['cropped_image'],  { responseType: 'arraybuffer' });
+                    const backImageBuffer = Buffer.from(backImageResponse.data, "utf-8");
+                    await s3.uploadContent(backImageBuffer, transactionId, `back-${transactionId}`);
+                }
+
+                if (images && Object.keys(images.back).length > 0){
+                    const selfieImageResponse = await axios.get(images.selfie['face_image'],  { responseType: 'arraybuffer' });
+                    const selfieImageBuffer = Buffer.from(selfieImageResponse.data, "utf-8");
+                    await s3.uploadContent(selfieImageBuffer, transactionId, `selfie-${transactionId}`);
+                }
+                
+                const isUser = Object.keys(formattedResponse?.user).length;
+                if (isUser) {
+                    try {
+                        hrfaReport = await hrfaService(formattedResponse.user);
+                        const { message } = hrfaReport;
+                        if (message && message.idv_response === 'Failed') {
+                            message.checkType = 'Fraud Check';
+                            message.checkValue = 'Failed';
+                        } else if (message && message.idv_response === 'Verified') {
+                            message.checkType = 'Fraud Check';
+                            message.checkValue = 'Verified';
+                        }else {
+                            message.checkType = 'Fraud Check';
+                            message.checkValue = 'Inconclusive';
+                        }
+                        userChecks.push(message.checkValue);
+                        formattedResponse.checks.push({
+                            type: "FRAUD_CHECK",
+                            report: message,
+                        })
+                    } catch (error) {
+                        formattedResponse.checks.push({
+                            type: "FRAUD_CHECK",
+                            report: {
+                                checkType:"Fraud Check",
+                                checkValue:"N / A",
+                            },
+                        })
                         catchFunction({
                             res,
                             requestId: req._id,
                             fileName: 'berbix.controller.js',
-                            methodName: 'maxMindService',
+                            methodName: 'getUserData-hrfaReport',
                             error,
                             onlyLog: true,
                         });
-                    })
+                    }
+
+                    if (!maxmindReport && userIpAddress) {
+                        // maxmind service
+                        maxMindService({ ipAddress: userIpAddress }).then(response => {
+                            maxmindReport = response;
+                        }).catch(error => {
+                            catchFunction({
+                                res,
+                                requestId: req._id,
+                                fileName: 'berbix.controller.js',
+                                methodName: 'maxMindService',
+                                error,
+                                onlyLog: true,
+                            });
+                        })
+                    }
                 }
             }
 
