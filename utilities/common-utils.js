@@ -13,7 +13,7 @@ const getError = (error) => {
 }
 
 const catchFunction = (_args) => {
-    const { res, requestId, fileName, methodName, error } = _args;
+    const { res, requestId, fileName, methodName, error, onlyLog= false } = _args;
     const loggerObject = {
         requestId,
         fileName,
@@ -22,10 +22,17 @@ const catchFunction = (_args) => {
         error,
     };
     global.logger(loggerObject);
-    return res.status(ERROR.INTERNAL_SERVER_ERROR.CODE).send({
-        status: 0,
-        message: message.INTERNAL_SERVER_ERROR,
-    });
+    if (!onlyLog) {
+        if (error && error.message) {
+            return res.status(ERROR.BAD_REQUEST.CODE).send({
+                message: error.message,
+            });
+        }
+        return res.status(ERROR.INTERNAL_SERVER_ERROR.CODE).send({
+            status: 0,
+            message: messages.INTERNAL_SERVER_ERROR,
+        });
+    }
 }
 
 /**

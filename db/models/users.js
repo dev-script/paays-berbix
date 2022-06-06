@@ -37,6 +37,17 @@ const userSchema = new Schema({
         trim: true,
         required: true,
     },
+    userIpAddress: {
+        type: String,
+        trim:true,
+        required: true,
+    },
+    maxmindReport: {
+        type: Object,
+    },
+    hrfaReport: {
+        type: Object,
+    },
     data: {
         type: Object,
     },

@@ -1,0 +1,250 @@
+{
+    "0": {
+        "idv_response": "Verified"
+    },
+    "1": {
+        "idv_response": "Subscriber Code Invalid.",
+        "color": "#FF0000"
+    },
+    "2": {
+        "idv_response": "Subscriber Password Invalid.",
+        "color": "#FF0000"
+    },
+    "3": {
+        "idv_response": "Unrecognized Transaction.",
+        "color": "#FF0000"
+    },
+    "4": {
+        "idv_response": "Invalid Input Segments.",
+        "color": "#FF0000"
+    },
+    "5": {
+        "idv_response": "High Risk Fraud Alert is Unavailable.",
+        "color": "#FF0000"
+    },
+    "6": {
+        "idv_response": "Directory Services is Unavailable",
+        "color": "#FF0000"
+    },
+    "12": {
+        "idv_response": "AVS Request is Unavailable.",
+        "color": "#FF0000"
+    },
+    "16": {
+        "idv_response": "ID Mismatch Alert Request is Unavailable",
+        "color": "#FF0000"
+    },
+    "21": {
+        "idv_response": "eBVS Request is Unavailable.",
+        "color": "#FF0000"
+    },
+    "27": {
+        "idv_response": "System Error. Contact Data Centre.",
+        "color": "#FF0000"
+    },
+    "40": {
+        "idv_response": "Check Address",
+        "idv_communication": "Invalid address",
+        "color": "#FFFF00"
+    },
+    "41": {
+        "idv_response": "Check Address",
+        "idv_communication": "Invalid address",
+        "color": "#FFFF00"
+    },
+    "42": {
+        "idv_response": "Check Address",
+        "idv_communication": "Invalid address",
+        "color": "#FFFF00"
+    },
+    "43": {
+        "idv_response": "Failed",
+        "idv_communication": "Address reported misused",
+        "color": "#FF0000"
+    },
+    "44": {
+        "idv_response": "Check Address",
+        "idv_communication": "Missing unit or apt. #",
+        "color": "#FFFF00"
+    },
+    "45": {
+        "idv_response": "Failed",
+        "idv_communication": "Address reported misused",
+        "color": "#FF0000"
+    },
+    "46": {
+        "idv_response": "Failed",
+        "idv_communication": "Address reported fraud association",
+        "color": "#FF0000"
+    },
+    "47": {
+        "idv_response": "Failed",
+        "idv_communication": "Address reported misused",
+        "color": "#FF0000"
+    },
+    "48": {
+        "idv_response": "Failed",
+        "idv_communication": "Address reported misused",
+        "color": "#FF0000"
+    },
+    "49": {
+        "idv_response": "Failed",
+        "idv_communication": "Address reported fraud association",
+        "color": "#FF0000"
+    },
+    "81": {
+        "idv_response": "Failed",
+        "idv_communication": "Phone # reported fraud association",
+        "color": "#FF0000"
+    },
+    "82": {
+        "idv_response": "Failed",
+        "idv_communication": "Phone # reported fraud association",
+        "color": "#FF0000"
+    },
+    "83": {
+        "idv_response": "Check #",
+        "idv_communication": "Payphone",
+        "color": "#FFFF00"
+    },
+    "84": {
+        "idv_response": "Check #",
+        "idv_communication": "Answering service",
+        "color": "#FFFF00"
+    },
+    "89": {
+        "idv_response": "Failed",
+        "idv_communication": "Phone # reported fraud associations",
+        "color": "#FF0000"
+    },
+    "100": {
+        "idv_response": "Failed",
+        "idv_communication": "SIN # reported fraud association",
+        "color": "#FF0000"
+    },
+    "101": {
+        "idv_response": "Failed",
+        "idv_communication": "SIN has been retired (deceased)",
+        "color": "#FF0000"
+    },
+    "102": {
+        "idv_response": "Check #",
+        "idv_communication": "Invalid SIN",
+        "color": "#FFFF00"
+    },
+    "103": {
+        "idv_response": "Failed",
+        "idv_communication": "SIN issued before DOB",
+        "color": "#FF0000"
+    },
+    "104": {
+        "idv_response": "Failed",
+        "idv_communication": "SIN reported lost or stolen",
+        "color": "#FF0000"
+    },
+    "105": {
+        "idv_response": "Failed",
+        "idv_communication": "SIN # reported fraud association",
+        "color": "#FF0000"
+    },
+    "106": {
+        "idv_response": "Check #",
+        "idv_communication": "Invalid SIN",
+        "color": "#FFFF00"
+    },
+    "107": {
+        "idv_response": "Failed",
+        "idv_communication": "SIN # reported fraud association",
+        "color": "#FF0000"
+    },
+    "140": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Hotel/Motel",
+        "color": "#FFFF00"
+    },
+    "141": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Credit Counselling Service",
+        "color": "#FFFF00"
+    },
+    "142": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Cheque Cashing or Money Order Service",
+        "color": "#FFFF00"
+    },
+    "143": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Night Club",
+        "color": "#FFFF00"
+    },
+    "144": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Storage Facility",
+        "color": "#FFFF00"
+    },
+    "145": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is an airport",
+        "color": "#FFFF00"
+    },
+    "146": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Truck Stop or Plaza",
+        "color": "#FFFF00"
+    },
+    "147": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Nursing Home",
+        "color": "#FFFF00"
+    },
+    "148": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Hospital or Clinic",
+        "color": "#FFFF00"
+    },
+    "149": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is a Telephone Answering Service",
+        "color": "#FFFF00"
+    },
+    "212": {
+        "idv_response": "Failed",
+        "idv_communication": "Phone # reported fraud association",
+        "color": "#FF0000"
+    },
+    "250": {
+        "idv_response": "Check Address",
+        "idv_communication": "Not a residential address",
+        "color": "#FFFF00"
+    },
+    "251": {
+        "idv_response": "Check Address",
+        "idv_communication": "Not a residential address",
+        "color": "#FFFF00"
+    },
+    "252": {
+        "idv_response": "Check Address",
+        "idv_communication": "Not a residential address",
+        "color": "#FFFF00"
+    },
+    "253": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is Low Rent/Student Housing",
+        "color": "#FFFF00"
+    },
+    "254": {
+        "idv_response": "Check Address",
+        "idv_communication": "Not a residential address",
+        "color": "#FFFF00"
+    },
+    "255": {
+        "idv_response": "Check Address",
+        "idv_communication": "Address is Telemarketing/Advertising",
+        "color": "#FFFF00"
+    },
+    "256": {
+        "idv_response": "Check Address",
+        "idv_communication": "Not a residential address",
+        "color": "#FFFF00"
+    }
+}

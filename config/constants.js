@@ -6,6 +6,11 @@ const {
     BERBIX_API_SECRET,
     BERBIX_TEMPLATE_KEY,
     BERBIX_CUSTOMER_UID,
+    S3_ACCESS_KEY_ID,
+    S3_SECRET_ACCESS_KEY,
+    S3_BUCKET_NAME,
+    MAXMIND_REPORT_API,
+    HRFA_REPORT_API,
 } = process.env;
 
 const constants = {
@@ -16,6 +21,11 @@ const constants = {
     BERBIX_API_SECRET,
     BERBIX_TEMPLATE_KEY,
     BERBIX_CUSTOMER_UID,
+    S3_ACCESS_KEY_ID,
+    S3_SECRET_ACCESS_KEY,
+    S3_BUCKET_NAME,
+    MAXMIND_REPORT_API,
+    HRFA_REPORT_API,
     SUCCESS: {
         CODE: 200,
     },
@@ -51,6 +61,7 @@ const constants = {
     	TRACE: "Trace"
 	},
     REGEX_EMAIL: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+    REGEX_IP_ADDRESS: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
 };
 
 module.exports = {

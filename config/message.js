@@ -30,6 +30,7 @@ const message = {
 
     PLEASE_PROVIDE_PHONE_NUMBER: 'please provide phone number',
     INVALID_EMAIL: 'invalid email',
+    TRANSACTION_ID_REQUIRED: 'transaction id is required',
 };
 
 module.exports = {

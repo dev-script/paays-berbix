@@ -56,6 +56,7 @@ const formatTransactionData = (data) => {
             id_type,
             address_postal_code,
             address_country,
+            address_subdivision,
             address_street,
             address_city,
         } = fields;
@@ -100,6 +101,18 @@ const formatTransactionData = (data) => {
         let issuing_authority = null;
         if (id_issuer && id_issuer.value) issuing_authority = id_issuer.value;
 
+        // address street
+        let street_address = null;
+        if (address_street && address_street.value) street_address = address_street.value;
+
+        // address city
+        let city_address = null;
+        if (address_city && address_city.value) city_address = address_city.value;
+
+        // address province_name
+        let province_name = null;
+        if (address_subdivision && address_subdivision.value) province_name = address_subdivision.value;
+
         // address postal code
         let postal_code = null;
         if (address_postal_code && address_postal_code.value) postal_code = address_postal_code.value;
@@ -113,6 +126,7 @@ const formatTransactionData = (data) => {
         if (address_street && address_street.value) address_array.push(address_street.value);
         if (address_city && address_city.value) address_array.push(address_city.value);
         if (address_country && address_country.value) address_array.push(address_country.value);
+        if (address_subdivision && address_subdivision.value) address_array.push(address_subdivision.value);
         if (address_postal_code && address_postal_code.value) address_array.push(address_postal_code.value);
         const formatted_address = address_array && address_array.length ? address_array.join(',') : null;
 
@@ -140,8 +154,10 @@ const formatTransactionData = (data) => {
                 document_type,
                 issuing_authority,
                 structured_postal_address: {
-                    // postal_code,
-                    // country,
+                    street_address,
+                    city_address,
+                    province_name,
+                    postal_code,
                     formatted_address,
                 },
             },
@@ -194,14 +210,14 @@ const acceptCheck = [
             "checkValue" : "Verified"
         }
     }, 
-    {
-        "type" : "FRAUD_CHECK",
-        "report" : {
-            "idv_response" : "Verified",
-            "checkType" : "Fraud Check",
-            "checkValue" : "Verified"
-        }
-    }
+    // {
+    //     "type" : "FRAUD_CHECK",
+    //     "report" : {
+    //         "idv_response" : "Verified",
+    //         "checkType" : "Fraud Check",
+    //         "checkValue" : "Verified"
+    //     }
+    // }
 ]
 
 const rejectCheck = [ 
@@ -241,14 +257,14 @@ const rejectCheck = [
             "checkValue" : "Failed"
         }
     }, 
-    {
-        "type" : "FRAUD_CHECK",
-        "report" : {
-            "idv_response" : "Failed",
-            "checkType" : "Fraud Check",
-            "checkValue" : "Failed"
-        }
-    }
+    // {
+    //     "type" : "FRAUD_CHECK",
+    //     "report" : {
+    //         "idv_response" : "Failed",
+    //         "checkType" : "Fraud Check",
+    //         "checkValue" : "Failed"
+    //     }
+    // }
 ]
 
 const reviewCheck = [ 
@@ -288,12 +304,12 @@ const reviewCheck = [
             "checkValue" : "Inconclusive"
         }
     }, 
-    {
-        "type" : "FRAUD_CHECK",
-        "report" : {
-            "idv_response" : "Inconclusive",
-            "checkType" : "Fraud Check",
-            "checkValue" : "Inconclusive"
-        }
-    }
+    // {
+    //     "type" : "FRAUD_CHECK",
+    //     "report" : {
+    //         "idv_response" : "Inconclusive",
+    //         "checkType" : "Fraud Check",
+    //         "checkValue" : "Inconclusive"
+    //     }
+    // }
 ]
