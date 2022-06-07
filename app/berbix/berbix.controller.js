@@ -150,7 +150,6 @@ module.exports = function (app) {
                 if (isUser) {
                     try {
                         hrfaReport = await hrfaService(formattedResponse.user);
-                        console.log("hrfaReport :", hrfaReport);
                         const { message } = hrfaReport;
                         if (message && message.idv_response === 'Failed') {
                             message.checkType = 'Fraud Check';
@@ -205,6 +204,8 @@ module.exports = function (app) {
             await updateDocument(Users, {
                 _id: userId
             }, {
+                maxmindReport,
+                hrfaReport,
                 data: formattedResponse
             })
             return res.status(SUCCESS.CODE).send({ data : fetchResponse });
