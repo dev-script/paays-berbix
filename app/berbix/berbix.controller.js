@@ -149,8 +149,10 @@ module.exports = function (app) {
                 const isUser = Object.keys(formattedResponse?.user).length;
                 if (isUser) {
                     try {
+                        console.log("formattedResponse 11111 :", formattedResponse);
                         hrfaReport = await hrfaService(formattedResponse.user);
                         const { message } = hrfaReport;
+                        console.log("formattedResponse 22222 :", formattedResponse);
                         if (message && message.idv_response === 'Failed') {
                             message.checkType = 'Fraud Check';
                             message.checkValue = 'Failed';
@@ -161,10 +163,12 @@ module.exports = function (app) {
                             message.checkType = 'Fraud Check';
                             message.checkValue = 'Inconclusive';
                         }
+                        console.log("formattedResponse 33333 :", formattedResponse);
                         formattedResponse.checks.push({
                             type: "FRAUD_CHECK",
                             report: message,
                         })
+                        console.log("formattedResponse 44444 :", formattedResponse);
                     } catch (error) {
                         formattedResponse.checks.push({
                             type: "FRAUD_CHECK",
@@ -182,7 +186,7 @@ module.exports = function (app) {
                             onlyLog: true,
                         });
                     }
-
+                    console.log("formattedResponse 55555 :", formattedResponse);
                     if (!maxmindReport && userIpAddress) {
                         // maxmind service
                         maxMindService({ ipAddress: userIpAddress }).then(response => {
@@ -200,7 +204,7 @@ module.exports = function (app) {
                     }
                 }
             }
-
+            console.log("formattedResponse 66666 :", formattedResponse);
             await updateDocument(Users, {
                 _id: userId
             }, {
