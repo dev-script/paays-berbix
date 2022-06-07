@@ -114,7 +114,9 @@ module.exports = function (app) {
                     message: message.USER_NOT_FOUND,
                 });
             }
-            const { _id: userId, refreshToken, transactionId, maxmindReport, userIpAddress } = userData;
+            const { _id: userId, refreshToken, transactionId, userIpAddress } = userData;
+            let { maxmindReport=null } = userData;
+            
             const fetchResponse = await getTransactionData(refreshToken);
             //format transaction meta data
             let formattedResponse = {};
@@ -187,21 +189,21 @@ module.exports = function (app) {
                         });
                     }
                     console.log("formattedResponse 55555 :", formattedResponse);
-                    if (!maxmindReport && userIpAddress) {
-                        // maxmind service
-                        maxMindService({ ipAddress: userIpAddress }).then(response => {
-                            maxmindReport = response;
-                        }).catch(error => {
-                            catchFunction({
-                                res,
-                                requestId: req._id,
-                                fileName: 'berbix.controller.js',
-                                methodName: 'maxMindService',
-                                error,
-                                onlyLog: true,
-                            });
-                        })
-                    }
+                    // if (!maxmindReport && userIpAddress) {
+                    //     // maxmind service
+                    //     maxMindService({ ipAddress: userIpAddress }).then(response => {
+                    //         maxmindReport = response;
+                    //     }).catch(error => {
+                    //         catchFunction({
+                    //             res,
+                    //             requestId: req._id,
+                    //             fileName: 'berbix.controller.js',
+                    //             methodName: 'maxMindService',
+                    //             error,
+                    //             onlyLog: true,
+                    //         });
+                    //     })
+                    // }
                 }
             }
             console.log("formattedResponse 66666 :", formattedResponse);

@@ -53,7 +53,6 @@ const uploadContent = async (buffer, transactionId, imageName) => {
 		console.log("image uploaded successfully in s3::");
 		return uploaded;
 	} catch (err) {
-        console.log(err)
 		throw new Error(err);
 	}
 };
