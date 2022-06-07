@@ -13,19 +13,19 @@ const formatTransactionData = (data) => {
         action,
         fields
     } = data;
-    let state = null;
+    let state = 'COMPLETED';
     let checks = [];
     let checkResult = {};
     if (action === 'review') {
-        state = 'IN PROGRESS';
-        checks = reviewCheck;
+        // state = 'IN PROGRESS';
+        // checks = reviewCheck;
         checkResult = {
             status: "Inconclusive",
             color: "#FF9F43",
             icon: "query_builder"
         };
     }else if(action === 'accept') {
-        state = 'COMPLETED';
+        // state = 'COMPLETED';
         checks = acceptCheck;
         checkResult = {
             status: "Verified",
@@ -33,8 +33,8 @@ const formatTransactionData = (data) => {
             icon: "check_circle_outline"
         };
     }else {
-        state = 'EXPIRED';
-        checks = rejectCheck;
+        // state = 'EXPIRED';
+        // checks = rejectCheck;
         checkResult = {
             status: "Failed",
             color: "#E7455D",
@@ -139,6 +139,7 @@ const formatTransactionData = (data) => {
             customer_uid,
             duplicates,
             state,
+            action,
             checks,
             user: {
                 full_name,
