@@ -37,7 +37,7 @@ module.exports = function (app) {
                 const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
-                const requestedIP =  req.headers['x-forwarded-for'];
+                const requestedIP =  '103.59.75.103' //req.headers['x-forwarded-for'];
                 const validIp = constants.REGEX_IP_ADDRESS.test(requestedIP);
                 if (!validIp) {
                     throw new Error('invalid user ip address');
@@ -150,6 +150,7 @@ module.exports = function (app) {
                 if (isUser) {
                     try {
                         hrfaReport = await hrfaService(formattedResponse.user);
+                        console.log("hrfaReport :", hrfaReport);
                         const { message } = hrfaReport;
                         if (message && message.idv_response === 'Failed') {
                             message.checkType = 'Fraud Check';
@@ -161,7 +162,6 @@ module.exports = function (app) {
                             message.checkType = 'Fraud Check';
                             message.checkValue = 'Inconclusive';
                         }
-                        userChecks.push(message.checkValue);
                         formattedResponse.checks.push({
                             type: "FRAUD_CHECK",
                             report: message,
