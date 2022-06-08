@@ -1,0 +1,139 @@
+
+body {
+    padding-top: 4.5rem;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+table td:first-child {
+    width: 30%;
+}
+
+.header {
+    background: linear-gradient(270deg, #53BFEB 0%, #0196E7 100%);
+}
+
+.header .logo {
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: -0.94px;
+    line-height: 16px;
+}
+.header span {
+    color: #F7F8F9;
+    font-size: 10px;
+    letter-spacing: 0;
+    line-height: 22px;
+    text-align: right;
+    position: absolute;
+    top: 4px;
+}
+
+.get-start .identity-card{
+    height: 73px;
+    width: 73px;
+    display: block;
+    border-radius: 50%;
+    border: 1.5px solid #01AAEE;
+    box-sizing: border-box;
+}
+.get-start .identity-card i{
+    font-size: 38px;
+    color: #01AAEE;
+    display: block;
+    text-align: center;
+    padding: 15px;
+}
+
+.get-start .link {
+    color: #01AAEE;
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 22px;
+    text-align: center;
+}
+
+.blue-btn {
+    height: 55px;
+    width: 197px;
+    color: #FFFFFF;
+    border-radius: 27.5px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 20px;
+    background: linear-gradient(270deg, #53BFEB 0%, #0196E7 100%);
+    border: none;
+    box-shadow: 0 2px 4px 0 rgba(70,82,98,0.2);
+}
+
+.blue-btn:hover {
+    color: #fff !important;
+}
+
+.white-outlnie-btn {
+    height: 36px;
+    width: 143px;
+    border: 2px solid #FFFFFF;
+    border-radius: 18px;
+    background-color: transparent;
+    color: #fff;
+    padding: 4px;
+}
+
+
+.title {
+    color: #2D3178;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.29px;
+    line-height: 36px;
+}
+
+.subtitle{
+    color: #465262;
+    font-size: 20px;
+    letter-spacing: 0;
+    line-height: 30px;
+}
+
+.text-white {
+    color: #fff !important;
+}
+
+.blue-color {
+    background: linear-gradient(308.89deg, #00C1F6 0%, #0196E7 100%) !important;
+}
+
+.iframe-size {
+    height:83vh;
+    border: none;
+}
+
+.text-underline {
+    text-decoration:underline;
+}
+
+ul {
+    list-style-type: none;
+}
+
+@media (max-width:575px) {
+    header .logo {
+        color: #FFFFFF;
+        font-size: 28px;
+    }
+    .white-outlnie-btn {
+        height: 30px;
+        font-size: 12px;
+    }
+    .navbar {
+        padding: .3rem 1rem;
+    }
+}
+
+@media (max-width:376px) {
+.iframe-size {
+    height: 78vh;
+}
+}
