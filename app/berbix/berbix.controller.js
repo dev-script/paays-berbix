@@ -37,7 +37,7 @@ module.exports = function (app) {
                 const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
-                const requestedIP = (req.headers['x-forwarded-for'] || '').split(',')[0] || req.connection.remoteAddress;
+                const requestedIP = '103.59.75.111' //(req.headers['x-forwarded-for'] || '').split(',')[0] || req.connection.remoteAddress;
                 const validIp = constants.REGEX_IP_ADDRESS.test(requestedIP);
                 if (!validIp) {
                     throw new Error('invalid user ip address');
@@ -123,7 +123,9 @@ module.exports = function (app) {
             //format transaction meta data
             let formattedResponse = {};
             if (fetchResponse && Object.keys(fetchResponse).length) formattedResponse = formatTransactionData(fetchResponse);
+            console.log("fetchResponse :", fetchResponse)
             if (formattedResponse && Object.keys(formattedResponse).length) {
+                console.log("formattedResponse :", formattedResponse)
                 const { images={} } = formattedResponse;
 
                 if (images && Object.keys(images.front).length > 0){
