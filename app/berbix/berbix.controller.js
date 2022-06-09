@@ -155,7 +155,6 @@ module.exports = function (app) {
                 if (isUser) {
                     try {
                         hrfaReport = await hrfaService(formattedResponse.user);
-                        console.log("hrfa result :", hrfaReport)
                         const { message } = hrfaReport;
                         if (message && message.idv_response === 'Failed') {
                             message.checkType = 'Fraud Check';
@@ -172,7 +171,6 @@ module.exports = function (app) {
                             report: message,
                         })
                     } catch (error) {
-                        console.log("hrfa error :", error)
                         formattedResponse.checks.push({
                             type: "FRAUD_CHECK",
                             report: {
@@ -191,11 +189,9 @@ module.exports = function (app) {
                     }
                     if (!maxmindReport && userIpAddress) {
                         // maxmind service
-                        maxMindService({ ipAddress: userIpAddress }).then(response => {
-                            maxmindReport = response;
-                            console.log("maxmind result before :", maxmindReport)
-                        }).catch(error => {
-                            console.log("maxmind error :", error)
+                        try {
+                            maxmindReport = await maxMindService({ ipAddress: userIpAddress });
+                        } catch (error) {
                             catchFunction({
                                 res,
                                 requestId: req._id,
@@ -204,11 +200,10 @@ module.exports = function (app) {
                                 error,
                                 onlyLog: true,
                             });
-                        })
+                        }
                     }
                 }
             }
-            console.log("maxmind result after :", maxmindReport)
             await updateDocument(Users, {
                 _id: userId
             }, {
