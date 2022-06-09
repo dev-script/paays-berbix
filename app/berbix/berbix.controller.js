@@ -145,7 +145,7 @@ module.exports = function (app) {
                     await s3.uploadContent(backImageBuffer, transactionId, `back-${transactionId}`);
                 }
 
-                if (images && Object.keys(images.back).length > 0 && images.selfie['face_image']){
+                if (images && Object.keys(images.selfie).length > 0 && images.selfie['face_image']){
                     const selfieImageResponse = await axios.get(images.selfie['face_image'],  { responseType: 'arraybuffer' });
                     const selfieImageBuffer = Buffer.from(selfieImageResponse.data, "utf-8");
                     await s3.uploadContent(selfieImageBuffer, transactionId, `selfie-${transactionId}`);
