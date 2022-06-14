@@ -260,7 +260,7 @@ module.exports = function (app) {
                 }
             }
 
-            return res.status(SUCCESS.CODE).send({ data });
+            return res.status(SUCCESS.CODE).send({ status:1, data });
         } catch (getUserError) {
             return catchFunction({
                 res,
