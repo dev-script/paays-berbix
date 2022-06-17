@@ -51,13 +51,13 @@ module.exports = function (app) {
                         hosted_url,
                     } = transaction;
                     // check if same phone number exists in database
-                    // const userData = await getDocument(Users, { phoneNumber });
+                    const userData = await getDocument(Users, { phoneNumber });
 
                     // remove user data if exists with same phone number
-                    // if (userData) {
-                    //     // remove user data from db
-                    //     await deleteDocument(Users, userData._id)
-                    // }
+                    if (userData) {
+                        // remove user data from db
+                        await deleteDocument(Users, userData._id)
+                    }
 
                     let maxmindReport = null;
                     // maxmind service

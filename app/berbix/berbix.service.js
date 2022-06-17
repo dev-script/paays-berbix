@@ -1,5 +1,4 @@
 const berbix = require('berbix');
-const randomWords = require('random-words');
 const { v4: uuidv4 } = require('uuid');
 const { constants } = require('../../config');
 
@@ -12,12 +11,12 @@ const client = new berbix.Client({
 
 const createTransaction = async (phone, email) => {
     try {
-        const customerUid = randomWords(2).join('-');
+        const customerUid = constants.BERBIX_CUSTOMER_UID || uuidv4();
         const transaction = await client.createHostedTransaction({
             customerUid, // ID for the user in internal database
             templateKey: BERBIX_TEMPLATE_KEY, // Template key for this transaction
             hostedOptions: {
-                completionEmail: 'engineering@paays.com'
+                completionEmail: email,
             },
             phone,
             email,
