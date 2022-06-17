@@ -50,15 +50,14 @@ module.exports = function (app) {
                         refresh_token,
                         hosted_url,
                     } = transaction;
-
                     // check if same phone number exists in database
-                    const userData = await getDocument(Users, { phoneNumber });
+                    // const userData = await getDocument(Users, { phoneNumber });
 
                     // remove user data if exists with same phone number
-                    if (userData) {
-                        // remove user data from db
-                        await deleteDocument(Users, userData._id)
-                    }
+                    // if (userData) {
+                    //     // remove user data from db
+                    //     await deleteDocument(Users, userData._id)
+                    // }
 
                     let maxmindReport = null;
                     // maxmind service
@@ -74,7 +73,6 @@ module.exports = function (app) {
                             onlyLog: true,
                         });
                     })
-
                     // save data in db
                     await createDocument(Users, {
                         customerUid: customer_uid,
@@ -86,6 +84,7 @@ module.exports = function (app) {
                         maxmindReport,
                         countryCode: country_code,
                     });
+
                     return res.redirect(hosted_url);
                 }
             } else throw new Error('missing request params phone number/email');
@@ -109,6 +108,7 @@ module.exports = function (app) {
                 });
             }
             const userData = await getDocument(Users, { phoneNumber }, {}, { sort: { createdAt: -1 } });
+
             if (!userData) {
                 return res.status(SUCCESS.CODE).send({
                     message: message.USER_NOT_FOUND,
