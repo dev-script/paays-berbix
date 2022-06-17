@@ -11,7 +11,7 @@ const client = new berbix.Client({
 
 const createTransaction = async (phone, email) => {
     try {
-        const customerUid = randomWords(2).join('-');
+        const customerUid = randomWords(3).join('-');
         const transaction = await client.createHostedTransaction({
             customerUid, // ID for the user in internal database
             templateKey: BERBIX_TEMPLATE_KEY, // Template key for this transaction
