@@ -126,9 +126,9 @@ module.exports = function (app) {
             if (formattedResponse && Object.keys(formattedResponse).length) {
                 const { images={} } = formattedResponse;
 
-                if (images && images.front && Object.keys(images.front).length > 0 && images.front['cropped_image']){
+                if (images && images.front && Object.keys(images.front).length > 0 && images.front['full_image']){
                     // upload user images in s3 bucket
-                    const frontImageResponse = await axios.get(images.front['cropped_image'],  { responseType: 'arraybuffer' });
+                    const frontImageResponse = await axios.get(images.front['full_image'],  { responseType: 'arraybuffer' });
                     const frontImageBuffer = Buffer.from(frontImageResponse.data, "utf-8");
                     await s3.uploadContent(frontImageBuffer, transactionId, `front-${transactionId}`);
                 }
@@ -139,14 +139,14 @@ module.exports = function (app) {
                     await s3.uploadContent(faceImageBuffer, transactionId, `face-${transactionId}`);
                 }
 
-                if (images && images.back && Object.keys(images.back).length > 0 && images.back['cropped_image']){
-                    const backImageResponse = await axios.get(images.back['cropped_image'],  { responseType: 'arraybuffer' });
+                if (images && images.back && Object.keys(images.back).length > 0 && images.back['full_image']){
+                    const backImageResponse = await axios.get(images.back['full_image'],  { responseType: 'arraybuffer' });
                     const backImageBuffer = Buffer.from(backImageResponse.data, "utf-8");
                     await s3.uploadContent(backImageBuffer, transactionId, `back-${transactionId}`);
                 }
 
-                if (images && images.selfie && Object.keys(images.selfie).length > 0 && images.selfie['face_image']){
-                    const selfieImageResponse = await axios.get(images.selfie['face_image'],  { responseType: 'arraybuffer' });
+                if (images && images.selfie && Object.keys(images.selfie).length > 0 && images.selfie['full_image']){
+                    const selfieImageResponse = await axios.get(images.selfie['full_image'],  { responseType: 'arraybuffer' });
                     const selfieImageBuffer = Buffer.from(selfieImageResponse.data, "utf-8");
                     await s3.uploadContent(selfieImageBuffer, transactionId, `selfie-${transactionId}`);
                 }
