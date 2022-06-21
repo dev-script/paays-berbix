@@ -37,7 +37,7 @@ module.exports = function (app) {
                 const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
-                const requestedIP = req.ip;
+                const requestedIP = req.headers['x-forwarded-for'];
                 const validIp = constants.REGEX_IP_ADDRESS.test(requestedIP);
                 if (!validIp) {
                     throw new Error('invalid user ip address');
