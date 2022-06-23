@@ -236,7 +236,7 @@ module.exports = function (app) {
                 const limit = parseInt(req.query.limit, 10);
                 const skip = (page - 1) * limit;
                 if (dealerEmail && phoneNumber) {
-                    data = await getDocument(Users, { dealerEmail, phoneNumber });
+                    data = await getDocument(Users, { dealerEmail, phoneNumber }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
                         return res.status(SUCCESS.CODE).send({
                             status: 0,
