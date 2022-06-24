@@ -236,7 +236,7 @@ module.exports = function (app) {
                 const limit = parseInt(req.query.limit, 10);
                 const skip = (page - 1) * limit;
                 if (dealerEmail && phoneNumber) {
-                    data = await getDocument(Users, { dealerEmail, phoneNumber });
+                    data = await getDocument(Users, { dealerEmail, phoneNumber }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
                         return res.status(SUCCESS.CODE).send({
                             status: 0,
@@ -253,10 +253,10 @@ module.exports = function (app) {
                             message: message.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { created_at: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { createdAt: -1 }, skip, limit });
                 }
                 if (!dealerEmail && !phoneNumber) {
-                    data = await getAllDocuments(Users, {}, {}, { sort: { created_at: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, skip, limit });
                 }
             }
 
