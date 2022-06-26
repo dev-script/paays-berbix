@@ -253,10 +253,10 @@ module.exports = function (app) {
                             message: message.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { createdAt: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { createdAt: -1 }, page, limit });
                 }
                 if (!dealerEmail && !phoneNumber) {
-                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, skip, limit });
+                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, page, limit });
                 }
             }
 
