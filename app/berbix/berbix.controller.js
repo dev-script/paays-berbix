@@ -1,4 +1,5 @@
 const { phone } = require('phone');
+const berbix = require('berbix');
 const axios = require('axios');
 const { Users } = require('../../db/models');
 const {
@@ -107,7 +108,7 @@ module.exports = function (app) {
                     message: message.PLEASE_PROVIDE_PHONE_NUMBER,
                 });
             }
-            const userData = await getDocument(Users, { phoneNumber }, {}, { sort: { createdAt: -1 } });
+            const userData = await getDocument(Users, { phoneNumber, active: true }, {}, { sort: { createdAt: -1 } });
 
             if (!userData) {
                 return res.status(SUCCESS.CODE).send({
@@ -297,6 +298,63 @@ module.exports = function (app) {
                 fileName: 'berbix.controller.js',
                 methodName: 's3ImageData',
                 error: s3ImageDataError,
+            });
+        }
+    };
+
+    app.berbixVerificationFinished = async (req, res) => {
+        try {
+            // const client = new berbix.Client({
+            //     apiSecret: constants.BERBIX_API_SECRET,
+            // });
+            // const secret = constants.WEBHOOK_SECRET; // this secret key can be found in the webhook section of the dashboard
+            // const body = JSON.stringify(req.body); // this is the body of the webhook request from Berbix
+            // const signature = `${new Date().getTime()}`; // content in the x-berbix-signature header, in the form v0,timestamp,signature
+            // console.log(secret, body, signature ,typeof secret, typeof body, typeof signature)
+            // const isValid = await client.validateSignature(secret, body, signature);
+            // console.log("********* :", isValid);
+
+            // console.log("here")
+
+            await updateDocument(Users, {
+                transactionId: transaction_id,
+            }, {
+                active: true
+            })
+
+            return res.status(SUCCESS.CODE).send({ status : 1 });
+        } catch (verificationError) {
+            console.log(verificationError)
+            catchFunction({
+                res,
+                requestId: req._id,
+                fileName: 'berbix.controller.js',
+                methodName: 'berbixVerificationFinished',
+                error: verificationError,
+            });
+        }
+    };
+
+    app.berbixVerificationStatus = async (req, res) => {
+        try {
+            const client = new berbix.Client({
+                apiSecret: constants.BERBIX_API_SECRET,
+            });
+              
+            const secret = constants.WEBHOOK_SECRET; // this secret key can be found in the webhook section of the dashboard
+            const body = req.body; // this is the body of the webhook request from Berbix
+            const signature = `${new Date().getTime()}`; // content in the x-berbix-signature header, in the form v0,timestamp,signature
+              
+            const isValid = await client.validateSignature(secret, body, signature);
+            
+            return res.status(SUCCESS.CODE).send({ status : 1 });
+        } catch (verificationStatusError) {
+            catchFunction({
+                res,
+                requestId: req._id,
+                fileName: 'berbix.controller.js',
+                methodName: 'berbixVerificationStatus',
+                error: verificationStatusError,
             });
         }
     };

@@ -11,6 +11,7 @@ const {
     S3_BUCKET_NAME,
     MAXMIND_REPORT_API,
     HRFA_REPORT_API,
+    WEBHOOK_SECRET,
 } = process.env;
 
 const constants = {
@@ -26,6 +27,7 @@ const constants = {
     S3_BUCKET_NAME,
     MAXMIND_REPORT_API,
     HRFA_REPORT_API,
+    WEBHOOK_SECRET,
     SUCCESS: {
         CODE: 200,
     },
