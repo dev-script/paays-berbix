@@ -315,9 +315,9 @@ module.exports = function (app) {
             // console.log("********* :", isValid);
 
             // console.log("here")
-
+            const data = req.body;
             await updateDocument(Users, {
-                transactionId: transaction_id,
+                transactionId: data.transaction_id,
             }, {
                 active: true
             })
