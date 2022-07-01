@@ -5,6 +5,7 @@ const {
     createDocument,
     updateDocument,
     deleteDocument,
+    deleteManyDocument,
 } = require('./common');
 
 module.exports = {
@@ -14,4 +15,5 @@ module.exports = {
     createDocument,
     updateDocument,
     deleteDocument,
+    deleteManyDocument,
 };
