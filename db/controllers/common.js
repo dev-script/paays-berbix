@@ -97,8 +97,10 @@ const deleteDocument = (_collections, documentId) => {
  * */
  const deleteManyDocument = (_collections, condition = {}) => {
     try {
-        _collections.deleteMany(condition);
-        return true;
+        console.log("condition :", condition)
+        const res = _collections.deleteMany(condition);
+        console.log("res :", res)
+        return res;
     } catch (deleteManyDocumentError) {
         const loggerObject = {
             fileName: "common.js",
