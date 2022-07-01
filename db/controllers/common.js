@@ -95,12 +95,10 @@ const deleteDocument = (_collections, documentId) => {
  * @param {model} _collection
  * @param {object} condition
  * */
- const deleteManyDocument = (_collections, condition = {}) => {
+ const deleteManyDocument = async(_collections, condition = {}) => {
     try {
-        console.log("condition :", condition)
-        const res = _collections.deleteMany(condition);
-        console.log("res :", res)
-        return res;
+        await _collections.deleteMany(condition);
+        return true;
     } catch (deleteManyDocumentError) {
         const loggerObject = {
             fileName: "common.js",
