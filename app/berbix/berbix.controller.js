@@ -9,6 +9,7 @@ const {
     updateDocument,
     deleteDocument,
     createDocument,
+    deleteManyDocument,
 } = require("../../db/controllers");
 const { createTransaction, getTransactionData } = require('./berbix.service');
 const { formatTransactionData } = require('./berbix.utils');
@@ -38,7 +39,7 @@ module.exports = function (app) {
                 const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
-                const requestedIP = req.headers['x-forwarded-for'];
+                const requestedIP = "13.144.15.16" //req.headers['x-forwarded-for'];
                 const validIp = constants.REGEX_IP_ADDRESS.test(requestedIP);
                 if (!validIp) {
                     throw new Error('invalid user ip address');
@@ -108,6 +109,7 @@ module.exports = function (app) {
                     message: message.PLEASE_PROVIDE_PHONE_NUMBER,
                 });
             }
+            
             const userData = await getDocument(Users, { phoneNumber, active: true }, {}, { sort: { createdAt: -1 } });
 
             if (!userData) {
@@ -212,6 +214,7 @@ module.exports = function (app) {
                 hrfaReport,
                 data: formattedResponse
             })
+            await deleteManyDocument(Users, { phoneNumber, active: { $ne: true } });
             return res.status(SUCCESS.CODE).send({ data : fetchResponse });
         } catch (getUserDataError) {
             return catchFunction({
@@ -235,9 +238,8 @@ module.exports = function (app) {
                 const { dealerEmail, phoneNumber } = req.query;
                 const page = parseInt(req.query.page, 10);
                 const limit = parseInt(req.query.limit, 10);
-                const skip = (page - 1) * limit;
                 if (dealerEmail && phoneNumber) {
-                    data = await getDocument(Users, { dealerEmail, phoneNumber }, {}, { sort: { createdAt: -1 } });
+                    data = await getDocument(Users, { dealerEmail, phoneNumber, active: true }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
                         return res.status(SUCCESS.CODE).send({
                             status: 0,
@@ -254,7 +256,7 @@ module.exports = function (app) {
                             message: message.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { dealerEmail }, {}, { sort: { createdAt: -1 }, page, limit });
+                    data = await getAllDocuments(Users, { dealerEmail, active: true }, {}, { sort: { createdAt: -1 }, page, limit });
                 }
                 if (!dealerEmail && !phoneNumber) {
                     data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, page, limit });

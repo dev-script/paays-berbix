@@ -72,7 +72,7 @@ const updateDocument = (_collection, condition = {}, data = {}) => {
 /**
  * Method to delete document in DB
  * @param {model} _collection
- * @param {object} collectionObject User info to save
+ * @param {string} documentId Document id
  * */
 const deleteDocument = (_collections, documentId) => {
     try {
@@ -90,6 +90,27 @@ const deleteDocument = (_collections, documentId) => {
     }
 };
 
+/**
+ * Method to delete mutiple documents in DB
+ * @param {model} _collection
+ * @param {object} condition
+ * */
+ const deleteManyDocument = (_collections, condition = {}) => {
+    try {
+        _collections.deleteMany(condition);
+        return true;
+    } catch (deleteManyDocumentError) {
+        const loggerObject = {
+            fileName: "common.js",
+            methodName: "deleteManyDocument",
+            type: constants.LOGGER_LEVELS.ERROR,
+            error: deleteManyDocumentError
+        };
+        global.logger(loggerObject);
+        return false;
+    }
+};
+
 module.exports = {
     getDocument,
     getDocumentById,
@@ -97,4 +118,5 @@ module.exports = {
     createDocument,
     updateDocument,
     deleteDocument,
+    deleteManyDocument,
 };
