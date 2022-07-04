@@ -51,6 +51,10 @@ const userSchema = new Schema({
     data: {
         type: Object,
     },
+    active: {
+        type: Boolean,
+        default: false,
+    }
 },
     {
         timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
