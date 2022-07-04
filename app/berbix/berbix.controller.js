@@ -236,8 +236,8 @@ module.exports = function (app) {
             } else {
                 // add pagination
                 const { dealerEmail, phoneNumber } = req.query;
-                const page = parseInt(req.query.page, 10);
-                const limit = parseInt(req.query.limit, 10);
+                // const page = parseInt(req.query.page, 10);
+                // const limit = parseInt(req.query.limit, 10);
                 if (dealerEmail && phoneNumber) {
                     data = await getDocument(Users, { dealerEmail, phoneNumber, active: true }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
@@ -256,10 +256,10 @@ module.exports = function (app) {
                             message: message.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { dealerEmail, active: true }, {}, { sort: { createdAt: -1 }, page, limit });
+                    data = await getAllDocuments(Users, { dealerEmail, active: true }, {}, { sort: { createdAt: -1 }});
                 }
                 if (!dealerEmail && !phoneNumber) {
-                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, page, limit });
+                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }});
                 }
             }
 
