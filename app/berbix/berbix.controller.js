@@ -28,7 +28,7 @@ module.exports = function (app) {
                 phoneNumber,
                 dealerEmail,
                 countryCode,
-            } = req.query;
+            } = req.body;
             const country_code = countryCode ? countryCode : 'CA';
             if (phoneNumber && dealerEmail && country_code) {
                 const result = phone(phoneNumber, {
@@ -51,6 +51,7 @@ module.exports = function (app) {
                         transaction_id,
                         refresh_token,
                         hosted_url,
+                        client_token,
                     } = transaction;
                     // check if same phone number exists in database
                     // const userData = await getDocument(Users, { phoneNumber });
@@ -86,10 +87,13 @@ module.exports = function (app) {
                         maxmindReport,
                         countryCode: country_code,
                     });
-
-                    return res.redirect(hosted_url);
+                    // return res.redirect(hosted_url);
+                    return res.status(SUCCESS.CODE).send({ status:1, client_token });
                 }
-            } else throw new Error('missing request params phone number/email');
+            } else {
+                // throw new Error('missing request params phone number/email');
+                return res.status(ERROR.BAD_REQUEST.CODE).send({ status:0, message: 'missing request params phone number/email' });
+            }
         } catch (saveTransactionError) {
             return catchFunction({
                 res,
