@@ -5,8 +5,7 @@ const { constants } = require('../config');
 const { HRFA_REPORT_API } = constants;
 
 const hrfaService = async (data) => {
-    console.log(data)
-    const { structured_postal_address, date_of_birth, given_names, family_name } = data;
+    const { structured_postal_address, date_of_birth, given_names, family_name, phoneNumber } = data;
     const {
         street_address,
         city_address,
@@ -21,10 +20,11 @@ const hrfaService = async (data) => {
     if (province_name) addressPayload.provinceName = province_name;
     if (postal_code) addressPayload.postalCode = postal_code;
     requestPayload["CurrAddress"] = addressPayload;
-    if (date_of_birth && date_of_birth.length) requestPayload["dateOfBirth"] = date_of_birth.split('-').join('');
-    if (given_names && given_names.length) requestPayload["firstName"] = given_names;
-    if (family_name && family_name.length) requestPayload["lastName"] = family_name;
-    console.log(requestPayload)
+    if (date_of_birth && date_of_birth.length) requestPayload["DateOfBirth"] = date_of_birth.split('-').join('');
+    if (given_names && given_names.length) requestPayload["FirstName"] = given_names;
+    if (family_name && family_name.length) requestPayload["LastName"] = family_name;
+    if (phoneNumber && phoneNumber.length) requestPayload["PhoneNumber"] = phoneNumber;
+
     return new Promise((resolve, reject) => {
         const options = {
             headers: {
@@ -36,24 +36,16 @@ const hrfaService = async (data) => {
             requestPayload,
             options,
         ).then((response) => {
-            const xmlResponse = response.data.IFSXML;
+            const xmlResponse = response.data.REL4Report;
             // check is response contains any type of error
             if (xmlResponse && xmlResponse.Errors) {
                 return reject(xmlResponse);
             }
-            // get HRFA code from response
-            let code;
-            const codes = xmlResponse.HAWK.Code;
-            if (Array.isArray(codes)) {
-                codes.sort(function(a, b){return a-b});
-                code = codes[0];
-            }else code = codes;
-            // get code message
-            const rule = HRFA_CODES[code];
-            const serviceResponse = {};
-            serviceResponse.code = code;
-            // handle if code message is not declared
-            if (rule) serviceResponse.message = rule;
+            const codes = xmlResponse['TU_FFR_Report']['IFSXMLAML'];
+            const codeResult = Object.values(codes);
+            const valid = codeResult.some(val => val === 'Y' )
+            let serviceResponse = { "idv_response": "Failed" };
+            if (valid) serviceResponse = { "idv_response": "Verified" };
             resolve(serviceResponse);
         }, (error) => {
             reject(error);

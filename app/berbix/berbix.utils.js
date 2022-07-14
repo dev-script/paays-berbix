@@ -51,7 +51,8 @@ const formatTransactionData = (data) => {
         customer_uid,
         duplicates,
         action,
-        fields
+        fields,
+        phoneNumber,
     } = data;
     let state = 'COMPLETED';
     let checks = [];
@@ -182,6 +183,7 @@ const formatTransactionData = (data) => {
                 middle_name: middle_name.value || null,
                 family_name: family_name.value || null,
                 gender,
+                phoneNumber,
                 date_of_birth,
                 age,
                 date_of_issue,
