@@ -352,7 +352,7 @@ module.exports = function (app) {
             // const signature = `${new Date().getTime()}`; // content in the x-berbix-signature header, in the form v0,timestamp,signature
               
             // const isValid = await client.validateSignature(secret, body, signature);
-
+            console.log("In hook :", req.body);
             const { customer_uid } = req.body;
 
             const userData = await getDocument(Users, { customerUid: customer_uid });
