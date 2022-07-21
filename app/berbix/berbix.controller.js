@@ -162,7 +162,7 @@ module.exports = function (app) {
                 if (isUser) {
                     try {
                         hrfaReport = await hrfaService(formattedResponse.user);
-                        const { message } = hrfaReport;
+                        const message = hrfaReport;
                         if (message && message.idv_response === 'Failed') {
                             message.checkType = 'Fraud Check';
                             message.checkValue = 'Failed';
