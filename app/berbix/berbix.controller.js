@@ -239,9 +239,18 @@ module.exports = function (app) {
                 data = await getDocumentById(Users, id);
             } else {
                 // add pagination
-                const { dealerEmail, phoneNumber } = req.query;
+                const { dealerEmail, phoneNumber, documentNumber } = req.query;
                 const page = parseInt(req.query.page, 10);
                 const limit = parseInt(req.query.limit, 10);
+                if (dealerEmail && phoneNumber && documentNumber) {
+                    data = await getDocument(Users, { dealerEmail, phoneNumber, 'data.user.documentNumber': documentNumber , active: true }, {}, { sort: { createdAt: -1 } });
+                    if (!data) {
+                        return res.status(SUCCESS.CODE).send({
+                            status: 0,
+                            message: message.USER_NOT_FOUND,
+                        });
+                    }
+                }
                 if (dealerEmail && phoneNumber) {
                     data = await getDocument(Users, { dealerEmail, phoneNumber, active: true }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
