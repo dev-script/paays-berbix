@@ -28,7 +28,7 @@ module.exports = function (app) {
                 phoneNumber,
                 dealerEmail,
                 countryCode,
-            } = req.query;
+            } = req.body;
             const country_code = countryCode ? countryCode : 'CA';
             if (phoneNumber && dealerEmail && country_code) {
                 const result = phone(phoneNumber, {
@@ -39,7 +39,7 @@ module.exports = function (app) {
                 const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
-                const requestedIP = "13.144.15.16" //req.headers['x-forwarded-for'];
+                const requestedIP = req.headers['x-forwarded-for'];
                 const validIp = constants.REGEX_IP_ADDRESS.test(requestedIP);
                 if (!validIp) {
                     throw new Error('invalid user ip address');
@@ -51,6 +51,7 @@ module.exports = function (app) {
                         transaction_id,
                         refresh_token,
                         hosted_url,
+                        client_token,
                     } = transaction;
                     // check if same phone number exists in database
                     // const userData = await getDocument(Users, { phoneNumber });
@@ -86,10 +87,13 @@ module.exports = function (app) {
                         maxmindReport,
                         countryCode: country_code,
                     });
-
-                    return res.redirect(hosted_url);
+                    // return res.redirect(hosted_url);
+                    return res.status(SUCCESS.CODE).send({ status:1, client_token });
                 }
-            } else throw new Error('missing request params phone number/email');
+            } else {
+                // throw new Error('missing request params phone number/email');
+                return res.status(ERROR.BAD_REQUEST.CODE).send({ status:0, message: 'missing request params phone number/email' });
+            }
         } catch (saveTransactionError) {
             return catchFunction({
                 res,
@@ -125,7 +129,7 @@ module.exports = function (app) {
             const fetchResponse = await getTransactionData(refreshToken);
             //format transaction meta data
             let formattedResponse = {};
-            if (fetchResponse && Object.keys(fetchResponse).length) formattedResponse = formatTransactionData(fetchResponse);
+            if (fetchResponse && Object.keys(fetchResponse).length) formattedResponse = formatTransactionData({ ...fetchResponse, phoneNumber });
             if (formattedResponse && Object.keys(formattedResponse).length) {
                 const { images={} } = formattedResponse;
 
@@ -158,7 +162,7 @@ module.exports = function (app) {
                 if (isUser) {
                     try {
                         hrfaReport = await hrfaService(formattedResponse.user);
-                        const { message } = hrfaReport;
+                        const message = hrfaReport;
                         if (message && message.idv_response === 'Failed') {
                             message.checkType = 'Fraud Check';
                             message.checkValue = 'Failed';
@@ -235,9 +239,18 @@ module.exports = function (app) {
                 data = await getDocumentById(Users, id);
             } else {
                 // add pagination
-                const { dealerEmail, phoneNumber } = req.query;
-                // const page = parseInt(req.query.page, 10);
-                // const limit = parseInt(req.query.limit, 10);
+                const { dealerEmail, phoneNumber, documentNumber } = req.query;
+                const page = parseInt(req.query.page, 10);
+                const limit = parseInt(req.query.limit, 10);
+                if (dealerEmail && phoneNumber && documentNumber) {
+                    data = await getDocument(Users, { dealerEmail, phoneNumber, 'data.user.documentNumber': documentNumber , active: true }, {}, { sort: { createdAt: -1 } });
+                    if (!data) {
+                        return res.status(SUCCESS.CODE).send({
+                            status: 0,
+                            message: message.USER_NOT_FOUND,
+                        });
+                    }
+                }
                 if (dealerEmail && phoneNumber) {
                     data = await getDocument(Users, { dealerEmail, phoneNumber, active: true }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
@@ -256,10 +269,10 @@ module.exports = function (app) {
                             message: message.INVALID_EMAIL,
                         });
                     }
-                    data = await getAllDocuments(Users, { dealerEmail, active: true }, {}, { sort: { createdAt: -1 }});
+                    data = await getAllDocuments(Users, { dealerEmail, active: true }, {}, { sort: { createdAt: -1 }, page, limit });
                 }
                 if (!dealerEmail && !phoneNumber) {
-                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }});
+                    data = await getAllDocuments(Users, {}, {}, { sort: { createdAt: -1 }, page, limit });
                 }
             }
 
@@ -339,16 +352,123 @@ module.exports = function (app) {
 
     app.berbixVerificationStatus = async (req, res) => {
         try {
-            const client = new berbix.Client({
-                apiSecret: constants.BERBIX_API_SECRET,
-            });
+            // const client = new berbix.Client({
+            //     apiSecret: constants.BERBIX_API_SECRET,
+            // });
               
-            const secret = constants.WEBHOOK_SECRET; // this secret key can be found in the webhook section of the dashboard
-            const body = req.body; // this is the body of the webhook request from Berbix
-            const signature = `${new Date().getTime()}`; // content in the x-berbix-signature header, in the form v0,timestamp,signature
+            // const secret = constants.WEBHOOK_SECRET; // this secret key can be found in the webhook section of the dashboard
+            // const body = req.body; // this is the body of the webhook request from Berbix
+            // const signature = `${new Date().getTime()}`; // content in the x-berbix-signature header, in the form v0,timestamp,signature
               
-            const isValid = await client.validateSignature(secret, body, signature);
-            
+            // const isValid = await client.validateSignature(secret, body, signature);
+            console.log("In hook :", req.body);
+            const { customer_uid } = req.body;
+
+            const userData = await getDocument(Users, { customerUid: customer_uid });
+
+            if (!userData) {
+                return res.status(SUCCESS.CODE).send({
+                    message: message.USER_NOT_FOUND,
+                });
+            }
+            const { _id: userId, refreshToken, transactionId, userIpAddress, phoneNumber } = userData;
+
+            let { maxmindReport=null } = userData;
+            let hrfaReport = null;
+
+            const fetchResponse = await getTransactionData(refreshToken);
+            //format transaction meta data
+            let formattedResponse = {};
+            if (fetchResponse && Object.keys(fetchResponse).length) formattedResponse = formatTransactionData({ ...fetchResponse, phoneNumber });
+            if (formattedResponse && Object.keys(formattedResponse).length) {
+                const { images={} } = formattedResponse;
+
+                if (images && images.front && Object.keys(images.front).length > 0 && images.front['full_image']){
+                    // upload user images in s3 bucket
+                    const frontImageResponse = await axios.get(images.front['full_image'],  { responseType: 'arraybuffer' });
+                    const frontImageBuffer = Buffer.from(frontImageResponse.data, "utf-8");
+                    await s3.uploadContent(frontImageBuffer, transactionId, `front-${transactionId}`);
+                }
+
+                if (images && images.front && Object.keys(images.front).length > 0 && images.front['face_image']){
+                    const faceImageResponse = await axios.get(images.front['face_image'],  { responseType: 'arraybuffer' });
+                    const faceImageBuffer = Buffer.from(faceImageResponse.data, "utf-8");
+                    await s3.uploadContent(faceImageBuffer, transactionId, `face-${transactionId}`);
+                }
+
+                if (images && images.back && Object.keys(images.back).length > 0 && images.back['full_image']){
+                    const backImageResponse = await axios.get(images.back['full_image'],  { responseType: 'arraybuffer' });
+                    const backImageBuffer = Buffer.from(backImageResponse.data, "utf-8");
+                    await s3.uploadContent(backImageBuffer, transactionId, `back-${transactionId}`);
+                }
+
+                if (images && images.selfie && Object.keys(images.selfie).length > 0 && images.selfie['full_image']){
+                    const selfieImageResponse = await axios.get(images.selfie['full_image'],  { responseType: 'arraybuffer' });
+                    const selfieImageBuffer = Buffer.from(selfieImageResponse.data, "utf-8");
+                    await s3.uploadContent(selfieImageBuffer, transactionId, `selfie-${transactionId}`);
+                }
+                
+                const isUser = Object.keys(formattedResponse?.user).length;
+                if (isUser) {
+                    try {
+                        hrfaReport = await hrfaService(formattedResponse.user);
+                        const message = hrfaReport;
+                        if (message && message.idv_response === 'Failed') {
+                            message.checkType = 'Fraud Check';
+                            message.checkValue = 'Failed';
+                        } else if (message && message.idv_response === 'Verified') {
+                            message.checkType = 'Fraud Check';
+                            message.checkValue = 'Verified';
+                        }else {
+                            message.checkType = 'Fraud Check';
+                            message.checkValue = 'Inconclusive';
+                        }
+                        formattedResponse.checks.push({
+                            type: "FRAUD_CHECK",
+                            report: message,
+                        })
+                    } catch (error) {
+                        formattedResponse.checks.push({
+                            type: "FRAUD_CHECK",
+                            report: {
+                                checkType:"Fraud Check",
+                                checkValue:"N / A",
+                            },
+                        })
+                        catchFunction({
+                            res,
+                            requestId: req._id,
+                            fileName: 'berbix.controller.js',
+                            methodName: 'berbixVerificationStatus-hrfaReport',
+                            error,
+                            onlyLog: true,
+                        });
+                    }
+                    if (!maxmindReport && userIpAddress) {
+                        // maxmind service
+                        try {
+                            maxmindReport = await maxMindService({ ipAddress: userIpAddress });
+                        } catch (error) {
+                            catchFunction({
+                                res,
+                                requestId: req._id,
+                                fileName: 'berbix.controller.js',
+                                methodName: 'berbixVerificationStatus-maxMindService',
+                                error,
+                                onlyLog: true,
+                            });
+                        }
+                    }
+                }
+            }
+            await updateDocument(Users, {
+                _id: userId
+            }, {
+                maxmindReport,
+                hrfaReport,
+                data: formattedResponse
+            })
+
             return res.status(SUCCESS.CODE).send({ status : 1 });
         } catch (verificationStatusError) {
             catchFunction({
