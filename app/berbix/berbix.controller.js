@@ -243,7 +243,7 @@ module.exports = function (app) {
                 const page = parseInt(req.query.page, 10);
                 const limit = parseInt(req.query.limit, 10);
                 if (dealerEmail && phoneNumber && documentNumber) {
-                    data = await getDocument(Users, { dealerEmail, phoneNumber, 'data.user.documentNumber': documentNumber , active: true }, {}, { sort: { createdAt: -1 } });
+                    data = await getDocument(Users, { dealerEmail, phoneNumber, 'data.user.document_number': documentNumber , active: true }, {}, { sort: { createdAt: -1 } });
                     if (!data) {
                         return res.status(SUCCESS.CODE).send({
                             status: 0,
