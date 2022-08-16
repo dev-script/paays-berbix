@@ -1,8 +1,9 @@
 const berbix = require('berbix');
+const axios = require('axios');
 const randomWords = require('random-words');
 const { constants } = require('../../config');
 
-const { BERBIX_API_SECRET, BERBIX_TEMPLATE_KEY } = constants;
+const { BERBIX_API_SECRET, BERBIX_TEMPLATE_KEY, ID_COUNTRY, ID_TYPE } = constants;
 
 const client = new berbix.Client({
     apiSecret: BERBIX_API_SECRET,
@@ -20,13 +21,35 @@ const createTransaction = async (phone, email) => {
             },
             phone,
             email,
-        });    
+        });
         return {
             customer_uid: customerUid,
             ...transaction.tokens.response,
         };
     } catch (createTransactionError) {
         throw new Error(createTransactionError.message);
+    }
+}
+
+const createApiOnlyTransaction = async (phone, email) => {
+    try {
+        const customerUid = randomWords(3).join('-');
+        const transaction = await client.createApiOnlyTransaction({
+            customerUid, // ID for the user in internal database
+            templateKey: BERBIX_TEMPLATE_KEY, // Template key for this transaction
+            phone,
+            email,
+            apiOnlyOptions: {
+                idCountry: ID_COUNTRY,
+                idType: ID_TYPE
+            },
+        });
+        return {
+            customer_uid: customerUid,
+            ...transaction.response,
+        };
+    } catch (createTransactionError) {
+        throw new Error(createTransactionError.message || createTransactionError);
     }
 }
 
@@ -56,8 +79,46 @@ const getTransactionData = async(refreshToken) => {
     }
 }
 
+// const ImageUpload = async (clientToken, data, imageSubject, format) => {
+//     try {
+//         const response = await client.uploadImages( { clientToken }, {
+//             images: [
+//               new berbix.EncodedImage(data, imageSubject, format)
+//             ]
+//         })
+//         console.log("response :", response);
+//         return response;
+//     } catch (ImageUploadError) {
+//         console.log("ImageUploadError :", ImageUploadError)
+//         throw new Error(ImageUploadError.message || ImageUploadError);
+//     }
+// }
+
+const ImageUpload = async (client_token, requestPayload) => {
+
+    return new Promise((resolve, reject) => {
+        const options = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${client_token}`
+            },
+        };
+        axios.post(
+            'https://api.berbix.com/v0/images/upload',
+            JSON.stringify({ images: [requestPayload] }),
+            options,
+        ).then((response) => {
+            resolve(response?.data);
+        }, (error) => {
+            reject(error);
+        });
+    })
+}
+
 module.exports = {
     createTransaction,
     regenerateTokens,
     getTransactionData,
+    ImageUpload,
+    createApiOnlyTransaction,
 }

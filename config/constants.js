@@ -12,6 +12,8 @@ const {
     MAXMIND_REPORT_API,
     HRFA_REPORT_API,
     WEBHOOK_SECRET,
+    ID_COUNTRY,
+    ID_TYPE,
 } = process.env;
 
 const constants = {
@@ -28,6 +30,8 @@ const constants = {
     MAXMIND_REPORT_API,
     HRFA_REPORT_API,
     WEBHOOK_SECRET,
+    ID_COUNTRY,
+    ID_TYPE,
     SUCCESS: {
         CODE: 200,
     },

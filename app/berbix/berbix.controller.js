@@ -11,7 +11,7 @@ const {
     createDocument,
     deleteManyDocument,
 } = require("../../db/controllers");
-const { createTransaction, getTransactionData } = require('./berbix.service');
+const { getTransactionData, ImageUpload, createApiOnlyTransaction } = require('./berbix.service');
 const { formatTransactionData } = require('./berbix.utils');
 const { constants, message } = require('../../config');
 const s3 = require('../../utilities/s3');
@@ -39,29 +39,19 @@ module.exports = function (app) {
                 const isValidEmail = re.test(dealerEmail.toLowerCase());
                 if (!isValidEmail) throw new Error('Invalid email');
                 if (!isValid) throw new Error('Invalid phone number');
-                const requestedIP = req.headers['x-forwarded-for'];
+                const requestedIP = '138.11.12.52' //req.headers['x-forwarded-for'];
                 const validIp = constants.REGEX_IP_ADDRESS.test(requestedIP);
                 if (!validIp) {
                     throw new Error('invalid user ip address');
                 }
                 else {
-                    const transaction = await createTransaction(phoneNumber, dealerEmail);
+                    const transaction = await createApiOnlyTransaction(phoneNumber, dealerEmail);
                     const {
                         customer_uid,
                         transaction_id,
                         refresh_token,
-                        hosted_url,
                         client_token,
                     } = transaction;
-                    // check if same phone number exists in database
-                    // const userData = await getDocument(Users, { phoneNumber });
-
-                    // remove user data if exists with same phone number
-                    // if (userData) {
-                    //     // remove user data from db
-                    //     await deleteDocument(Users, userData._id)
-                    // }
-
                     let maxmindReport = null;
                     // maxmind service
                     maxMindService({ ipAddress: requestedIP }).then(response => {
@@ -477,6 +467,55 @@ module.exports = function (app) {
                 fileName: 'berbix.controller.js',
                 methodName: 'berbixVerificationStatus',
                 error: verificationStatusError,
+            });
+        }
+    };
+
+    app.uploadImage = async (req, res) => {
+        try {
+            const { client_token } = req.headers;
+
+            if (!client_token) {
+                return res.status(ERROR.BAD_REQUEST.CODE).send({
+                    status: 0,
+                    message: 'invalid client token',
+                });
+            }
+
+            const { data, image_subject, format } = req.body;
+            if (!data || !image_subject || !format) {
+                return res.status(ERROR.BAD_REQUEST.CODE).send({
+                    status: 0,
+                    message: 'invalid payload',
+                });
+            }
+
+            const subjects = ["document_front", "document_back", "selfie_front", "selfie_left", "selfie_right" ];
+            const dataFormats = ["image/jpeg", "image/jpg", "image/png"];
+            const isValidFormat = dataFormats.includes(format);
+            if (!isValidFormat) {
+                return res.status(ERROR.BAD_REQUEST.CODE).send({
+                    status: 0,
+                    message: 'image format is not valid',
+                });
+            }
+            const isValidSubject = subjects.includes(image_subject);
+            if (!isValidSubject) {
+                return res.status(ERROR.BAD_REQUEST.CODE).send({
+                    status: 0,
+                    message: 'image subject is not valid',
+                });
+            }
+
+            const imageResponse = await ImageUpload(client_token, { data, image_subject, format });
+            return res.status(SUCCESS.CODE).send({ status : 1, data: imageResponse });
+        } catch (uploadImageError) {
+            catchFunction({
+                res,
+                requestId: req._id,
+                fileName: 'berbix.controller.js',
+                methodName: 'uploadImage',
+                error: uploadImageError,
             });
         }
     };
