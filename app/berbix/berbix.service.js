@@ -110,7 +110,7 @@ const ImageUpload = async (client_token, requestPayload) => {
         ).then((response) => {
             resolve(response?.data);
         }, (error) => {
-            reject(error);
+            reject(error?.response?.data);
         });
     })
 }

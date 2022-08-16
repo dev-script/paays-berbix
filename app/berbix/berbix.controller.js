@@ -490,7 +490,7 @@ module.exports = function (app) {
                 });
             }
 
-            const subjects = ["document_front", "document_back", "selfie_front", "selfie_left", "selfie_right" ];
+            // const subjects = ["document_front", "document_back", "selfie_front", "selfie_left", "selfie_right" ];
             const dataFormats = ["image/jpeg", "image/jpg", "image/png"];
             const isValidFormat = dataFormats.includes(format);
             if (!isValidFormat) {
@@ -499,13 +499,13 @@ module.exports = function (app) {
                     message: 'image format is not valid',
                 });
             }
-            const isValidSubject = subjects.includes(image_subject);
-            if (!isValidSubject) {
-                return res.status(ERROR.BAD_REQUEST.CODE).send({
-                    status: 0,
-                    message: 'image subject is not valid',
-                });
-            }
+            // const isValidSubject = subjects.includes(image_subject);
+            // if (!isValidSubject) {
+            //     return res.status(ERROR.BAD_REQUEST.CODE).send({
+            //         status: 0,
+            //         message: 'image subject is not valid',
+            //     });
+            // }
 
             const imageResponse = await ImageUpload(client_token, { data, image_subject, format });
             return res.status(SUCCESS.CODE).send({ status : 1, data: imageResponse });
