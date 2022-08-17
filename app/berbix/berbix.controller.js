@@ -482,8 +482,8 @@ module.exports = function (app) {
                 });
             }
 
-            const { selfie_images } = req.body;
-            if (!selfie_images || !Array.isArray(selfie_images)) {
+            const { images } = req.body;
+            if (!images || !Array.isArray(images)) {
                 return res.status(ERROR.BAD_REQUEST.CODE).send({
                     status: 0,
                     message: 'invalid payload',
@@ -507,7 +507,7 @@ module.exports = function (app) {
             //     });
             // }
 
-            const imageResponse = await ImageUpload(client_token, selfie_images);
+            const imageResponse = await ImageUpload(client_token, images);
             return res.status(SUCCESS.CODE).send({ status : 1, data: imageResponse });
         } catch (uploadImageError) {
             catchFunction({
