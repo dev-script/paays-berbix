@@ -105,7 +105,7 @@ const ImageUpload = async (client_token, requestPayload) => {
         };
         axios.post(
             'https://api.berbix.com/v0/images/upload',
-            JSON.stringify({ images: [requestPayload] }),
+            JSON.stringify({ images: requestPayload }),
             options,
         ).then((response) => {
             resolve(response?.data);

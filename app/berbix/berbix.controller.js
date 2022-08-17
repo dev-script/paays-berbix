@@ -482,8 +482,8 @@ module.exports = function (app) {
                 });
             }
 
-            const { data, image_subject, format } = req.body;
-            if (!data || !image_subject || !format) {
+            const { selfie_images } = req.body;
+            if (!selfie_images || !Array.isArray(selfie_images)) {
                 return res.status(ERROR.BAD_REQUEST.CODE).send({
                     status: 0,
                     message: 'invalid payload',
@@ -491,14 +491,14 @@ module.exports = function (app) {
             }
 
             // const subjects = ["document_front", "document_back", "selfie_front", "selfie_left", "selfie_right" ];
-            const dataFormats = ["image/jpeg", "image/jpg", "image/png"];
-            const isValidFormat = dataFormats.includes(format);
-            if (!isValidFormat) {
-                return res.status(ERROR.BAD_REQUEST.CODE).send({
-                    status: 0,
-                    message: 'image format is not valid',
-                });
-            }
+            // const dataFormats = ["image/jpeg", "image/jpg", "image/png"];
+            // const isValidFormat = dataFormats.includes(format);
+            // if (!isValidFormat) {
+            //     return res.status(ERROR.BAD_REQUEST.CODE).send({
+            //         status: 0,
+            //         message: 'image format is not valid',
+            //     });
+            // }
             // const isValidSubject = subjects.includes(image_subject);
             // if (!isValidSubject) {
             //     return res.status(ERROR.BAD_REQUEST.CODE).send({
@@ -507,7 +507,7 @@ module.exports = function (app) {
             //     });
             // }
 
-            const imageResponse = await ImageUpload(client_token, { data, image_subject, format });
+            const imageResponse = await ImageUpload(client_token, selfie_images);
             return res.status(SUCCESS.CODE).send({ status : 1, data: imageResponse });
         } catch (uploadImageError) {
             catchFunction({
