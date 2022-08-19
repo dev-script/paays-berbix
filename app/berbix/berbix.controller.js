@@ -474,7 +474,6 @@ module.exports = function (app) {
     app.uploadImage = async (req, res) => {
         try {
             const { authtoken } = req.headers;
-            console.log("authtoken : ", req.body)
             if (!authtoken) {
                 return res.status(ERROR.BAD_REQUEST.CODE).send({
                     status: 0,
