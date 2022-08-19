@@ -27,7 +27,7 @@ const createTransaction = async (phone, email) => {
             ...transaction.tokens.response,
         };
     } catch (createTransactionError) {
-        throw new Error(createTransactionError.message);
+        throw new Error(createTransactionError);
     }
 }
 
@@ -49,7 +49,7 @@ const createApiOnlyTransaction = async (phone, email) => {
             ...transaction.response,
         };
     } catch (createTransactionError) {
-        throw new Error(createTransactionError.message || createTransactionError);
+        throw new Error(createTransactionError);
     }
 }
 
