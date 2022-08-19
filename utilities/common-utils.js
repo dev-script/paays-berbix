@@ -31,7 +31,7 @@ const catchFunction = (_args) => {
         }
         return res.status(ERROR.INTERNAL_SERVER_ERROR.CODE).send({
             status: 0,
-            message: messages.INTERNAL_SERVER_ERROR,
+            message: message.INTERNAL_SERVER_ERROR,
         });
     }
 }
