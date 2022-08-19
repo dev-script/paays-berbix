@@ -473,12 +473,12 @@ module.exports = function (app) {
 
     app.uploadImage = async (req, res) => {
         try {
-            const { client_token } = req.headers;
-            console.log("client_token : ", req.headers)
-            if (!client_token) {
+            const { authtoken } = req.headers;
+            console.log("authtoken : ", req.headers)
+            if (!authtoken) {
                 return res.status(ERROR.BAD_REQUEST.CODE).send({
                     status: 0,
-                    message: 'invalid client token',
+                    message: 'invalid auth token',
                 });
             }
 
@@ -507,7 +507,7 @@ module.exports = function (app) {
             //     });
             // }
 
-            const imageResponse = await ImageUpload(client_token, images);
+            const imageResponse = await ImageUpload(authtoken, images);
             return res.status(SUCCESS.CODE).send({ status : 1, data: imageResponse });
         } catch (uploadImageError) {
             catchFunction({

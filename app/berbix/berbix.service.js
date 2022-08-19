@@ -94,13 +94,13 @@ const getTransactionData = async(refreshToken) => {
 //     }
 // }
 
-const ImageUpload = async (client_token, requestPayload) => {
+const ImageUpload = async (authtoken, requestPayload) => {
 
     return new Promise((resolve, reject) => {
         const options = {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${client_token}`
+                'Authorization': `Bearer ${authtoken}`
             },
         };
         axios.post(
