@@ -85,6 +85,7 @@ module.exports = function (app) {
                 return res.status(ERROR.BAD_REQUEST.CODE).send({ status:0, message: 'missing request params phone number/email' });
             }
         } catch (saveTransactionError) {
+            console.log(saveTransactionError)
             return catchFunction({
                 res,
                 requestId: req._id,
