@@ -474,7 +474,7 @@ module.exports = function (app) {
     app.uploadImage = async (req, res) => {
         try {
             const { client_token } = req.headers;
-            console.log("client_token : ", client_token)
+            console.log("client_token : ", req.headers)
             if (!client_token) {
                 return res.status(ERROR.BAD_REQUEST.CODE).send({
                     status: 0,
