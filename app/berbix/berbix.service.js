@@ -49,7 +49,7 @@ const createApiOnlyTransaction = async (phone, email) => {
             ...transaction.response,
         };
     } catch (createTransactionError) {
-        throw new Error(createTransactionError);
+        throw new Error(createTransactionError.message);
     }
 }
 
