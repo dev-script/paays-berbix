@@ -25,6 +25,7 @@ const catchFunction = (_args) => {
     if (!onlyLog) {
         if (error && error.message) {
             return res.status(ERROR.BAD_REQUEST.CODE).send({
+                status: 0,
                 message: error.message,
             });
         }

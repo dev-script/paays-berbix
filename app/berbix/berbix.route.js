@@ -8,4 +8,5 @@ module.exports = function (app) {
     app.route('/success').get(async (req, res) => res.render('pages/success'));
     app.route('/web-hook/verification-finished').post(app.berbixVerificationFinished);
     app.route('/web-hook/verification-status').post(app.berbixVerificationStatus);
+    app.route('/berbix/images/upload').post(app.uploadImage);
 };
