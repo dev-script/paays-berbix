@@ -103,15 +103,14 @@ const ImageUpload = async (authtoken, requestPayload) => {
                 'Authorization': `Bearer ${authtoken}`
             },
         };
+        console.log("JSON.stringify(requestPayload) :", JSON.stringify(requestPayload))
         axios.post(
             'https://api.berbix.com/v0/images/upload',
             JSON.stringify({ images: requestPayload }),
             options,
         ).then((response) => {
-            console.log("image upload response :", response?.data);
             resolve(response?.data);
         }, (error) => {
-            console.log("image upload error :", error);
             reject(error?.response?.data);
         });
     })
