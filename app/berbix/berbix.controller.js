@@ -505,7 +505,9 @@ module.exports = function (app) {
             //         message: 'image subject is not valid',
             //     });
             // }
-
+            images.forEach(image => {
+                console.log("check :", image.image_subject, image.format)
+            })
             const imageResponse = await ImageUpload(authtoken, images);
             console.log("image response : ", imageResponse);
             return res.status(SUCCESS.CODE).send({ status : 1, data: imageResponse });
